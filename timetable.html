@@ -1,0 +1,3363 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shree Warana Vidyalaya - Timetable</title>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Marathi&family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--pr:#1a3a5c;--ac:#e67e22;--gd:#f39c12;--lt:#f0f4f8;--tx:#2c3e50;--mu:#7f8c8d;--dn:#e74c3c;--ok:#27ae60;--bd:#dce3ea;--sh:0 4px 24px rgba(26,58,92,.10);--rd:12px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:#eaf0f6;color:var(--tx);min-height:100vh;}
+.hdr{background:linear-gradient(135deg,var(--pr) 60%,#2471a3);color:#fff;position:sticky;top:0;z-index:200;box-shadow:0 4px 18px rgba(26,58,92,.3);}
+.hdr-in{max-width:1700px;margin:0 auto;display:flex;align-items:center;gap:11px;padding:8px 16px;}
+.logo{width:40px;height:40px;border-radius:50%;background:var(--gd);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:900;color:var(--pr);flex-shrink:0;}
+.hdr-txt h1{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;}
+.hdr-txt p{font-size:.67rem;opacity:.75;margin-top:1px;}
+.hdr-nav{margin-left:auto;display:flex;gap:3px;flex-wrap:wrap;}
+.nb{padding:5px 10px;border-radius:6px;border:none;cursor:pointer;font-size:.72rem;font-weight:600;font-family:'DM Sans',sans-serif;transition:all .2s;background:rgba(255,255,255,.12);color:#fff;}
+.nb:hover,.nb.active{background:var(--gd);color:var(--pr);}
+.app{max-width:1700px;margin:0 auto;padding:16px 12px;}
+.card{background:#fff;border-radius:var(--rd);box-shadow:var(--sh);padding:16px;margin-bottom:13px;}
+.ct{font-size:.9rem;font-weight:700;color:var(--pr);margin-bottom:11px;display:flex;align-items:center;gap:5px;}
+.fg{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:9px;}
+.fg label,.fl{display:block;font-size:.68rem;font-weight:600;color:var(--mu);margin-bottom:2px;text-transform:uppercase;letter-spacing:.3px;}
+.fg input,.fg select,.fi{width:100%;padding:6px 8px;border:1.5px solid var(--bd);border-radius:6px;font-size:.83rem;font-family:'DM Sans',sans-serif;color:var(--tx);background:var(--lt);outline:none;transition:border .2s;}
+.fg input:focus,.fg select:focus,.fi:focus{border-color:var(--pr);background:#fff;}
+.btn{padding:6px 13px;border-radius:6px;border:none;cursor:pointer;font-size:.78rem;font-weight:600;font-family:'DM Sans',sans-serif;transition:all .2s;display:inline-flex;align-items:center;gap:4px;}
+.bp{background:var(--pr);color:#fff;}.bp:hover{background:#154572;}
+.bg2{background:var(--gd);color:var(--pr);}.bg2:hover{background:#e67e22;}
+.bd2{background:var(--dn);color:#fff;}.bd2:hover{background:#c0392b;}
+.bk{background:var(--ok);color:#fff;}.bk:hover{background:#1e8449;}
+.bi{background:#2980b9;color:#fff;}.bi:hover{background:#1f618d;}
+.bo{background:transparent;border:1.5px solid var(--pr);color:var(--pr);}.bo:hover{background:var(--pr);color:#fff;}
+.bs{padding:3px 7px;font-size:.67rem;}
+.tab-bar{display:flex;gap:2px;border-bottom:2px solid var(--bd);margin-bottom:13px;flex-wrap:wrap;}
+.tab{padding:5px 12px;cursor:pointer;border-radius:6px 6px 0 0;font-size:.77rem;font-weight:600;color:var(--mu);transition:all .2s;border:none;background:transparent;font-family:'DM Sans',sans-serif;position:relative;bottom:-2px;}
+.tab.active{color:var(--pr);background:#fff;border:2px solid var(--bd);border-bottom:2px solid #fff;}
+.tab:hover:not(.active){color:var(--pr);background:var(--lt);}
+/* DATA TABLE */
+.dt{width:100%;border-collapse:collapse;font-size:.8rem;}
+.dt th{background:var(--pr);color:#fff;padding:6px 9px;text-align:left;font-weight:600;font-size:.67rem;text-transform:uppercase;letter-spacing:.3px;}
+.dt th:first-child{border-radius:6px 0 0 0;}.dt th:last-child{border-radius:0 6px 0 0;}
+.dt td{padding:5px 9px;border-bottom:1px solid var(--bd);vertical-align:middle;}
+.dt tr:hover td{background:var(--lt);}
+/* PRINT-STYLE TIMETABLE (rows=time, cols=days) */
+.ptt{border-collapse:collapse;width:100%;font-size:.72rem;table-layout:fixed;}
+.ptt th{background:var(--pr);color:#fff;padding:5px 5px;text-align:center;font-size:.65rem;white-space:nowrap;border:1px solid #aaa;}
+.ptt th.sh-day{background:#7f3d00;}
+.ptt td{border:1px solid #ccc;padding:3px 3px;vertical-align:middle;text-align:center;}
+.ptt td.time-col{background:#f8fafc;font-weight:700;font-size:.63rem;color:var(--pr);text-align:center;min-width:62px;white-space:nowrap;}
+.ptt th{background:var(--pr);color:#fff;font-weight:700;font-size:.7rem;text-align:center;padding:8px 4px;min-width:90px;width:90px;}
+.ptt th:first-child{background:#f8fafc;color:var(--pr);}
+.ptt th:last-child{min-width:110px;width:110px;}
+.ptt td{min-width:90px;width:90px;padding:4px 2px;text-align:center;}
+.ptt td.day-hdr{background:var(--pr);color:#fff;font-weight:700;font-size:.7rem;text-align:center;}
+.ptt td.sh-hdr{background:#7f3d00;color:#fff;font-weight:700;font-size:.7rem;text-align:center;}
+.ptt td.assembly{background:#fff9c4;color:#856404;font-weight:700;font-size:.63rem;}
+.ptt td.brk{background:#fef9e7;color:#b7770d;font-size:.62rem;font-weight:700;}
+.ptt td.lnch{background:#fff3e0;color:#d35400;font-size:.62rem;font-weight:700;}
+.ptt td.abhy{background:#e8f5e9;color:#2e7d32;font-size:.62rem;font-weight:700;}
+.ptt td.abhr{background:#f3e5f5;color:#7b1fa2;font-size:.62rem;font-weight:700;}
+.ptt td.off{background:#f0f0f0;color:#bbb;font-size:.6rem;}
+.ptt td.filled{background:#eaf5fb;cursor:pointer;}
+.ptt td.filled:hover{background:#cce5f5;}
+.ptt td.empty{background:#fafafa;color:#ccc;font-size:.6rem;cursor:pointer;}
+.ptt td.empty:hover{background:#dbeafe;}
+.ptt td.dbl-l{border-right:2.5px dashed #94b8d8!important;}
+.ptt td.dbl-r{background:#eff8ff;border-left:none!important;}
+.cell-subj{font-weight:700;font-size:.72rem;display:block;line-height:1.2;}
+.cell-info{font-size:.6rem;color:#666;display:block;line-height:1.2;}
+/* TEACHER COL */
+.ptt td.tchr-col{background:#f8fafc;font-size:.62rem;text-align:left;padding:4px 5px;vertical-align:top;min-width:120px;width:120px;max-width:120px;word-wrap:break-word;}
+/* MISC */
+.badge{display:inline-block;padding:1px 6px;border-radius:20px;font-size:.63rem;font-weight:700;}
+.bb{background:#d6eaf8;color:#1a5276;}.bgg{background:#d5f5e3;color:#1e8449;}
+.bo2{background:#fdebd0;color:#a04000;}.br{background:#fdecea;color:#922b21;}
+.bgy{background:#eee;color:#555;}.bpu{background:#e8daef;color:#6c3483;}
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center;}
+.mo.show{display:flex;}
+.md{background:#fff;border-radius:var(--rd);padding:18px;width:92%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,.3);position:relative;max-height:92vh;overflow-y:auto;}
+.md h3{font-size:.92rem;font-weight:700;color:var(--pr);margin-bottom:11px;}
+.mc{position:absolute;top:8px;right:8px;background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--mu);}
+.page{display:none;}.page.active{display:block;}
+.es{text-align:center;padding:26px 16px;color:var(--mu);}
+.ib{background:#e8f4fd;color:#1a5276;border:1px solid #aed6f1;border-radius:6px;padding:5px 10px;font-size:.74rem;margin-bottom:8px;}
+.wb{background:#fdecea;color:#922b21;border:1px solid #f5c6cb;border-radius:6px;padding:5px 10px;font-size:.73rem;margin-bottom:7px;}
+.ob{background:#d5f5e3;color:#1e8449;border:1px solid #82e0aa;border-radius:6px;padding:5px 10px;font-size:.73rem;margin-bottom:7px;}
+.warn-b{background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:6px;padding:8px 12px;font-size:.78rem;font-weight:600;margin-bottom:8px;}
+.ld-bar{height:6px;border-radius:3px;background:#e0e0e0;overflow:hidden;margin-top:2px;}
+.ld-fill{height:100%;border-radius:3px;}
+.toast{position:fixed;bottom:20px;right:20px;background:#1a3a5c;color:#fff;padding:10px 16px;border-radius:8px;font-size:.8rem;font-weight:600;z-index:9999;transform:translateY(100px);opacity:0;transition:all .3s;box-shadow:0 8px 28px rgba(0,0,0,.25);}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.warn{background:#e67e22;}.toast.error{background:#e74c3c;}.toast.success{background:#27ae60;}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px;}
+.ttw{overflow-x:auto;}
+.chip{padding:2px 7px;border-radius:20px;background:#d6eaf8;color:#1a5276;font-size:.69rem;font-weight:600;}
+@media(max-width:600px){.hdr-in{padding:6px 7px;gap:4px;}.nb{padding:4px 6px;font-size:.64rem;}.app{padding:7px 5px;}}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<header class="hdr">
+  <div class="hdr-in">
+    <div class="logo">श्री</div>
+    <div class="hdr-txt">
+      <h1>Shree Warana Vidyalaya, Warananagar</h1>
+      <p>Tal: Panhala, Dist: Kolhapur &nbsp;|&nbsp; Timetable System v6</p>
+    </div>
+    <nav class="hdr-nav">
+      <button class="nb active" onclick="SP('setup',this)">⚙️ Setup</button>
+      <button class="nb" onclick="SP('assign',this)">📋 Subjects</button>
+      <button class="nb" onclick="SP('editor',this)">📅 Editor</button>
+      <button class="nb" onclick="SP('view',this)">👁️ View</button>
+      <button class="nb" onclick="SP('print',this)">🖨️ Print</button>
+      <button class="nb" onclick="SP('reports',this)">📊 Reports</button>
+      <button class="nb" onclick="SP('errors',this)" style="background:rgba(231,76,60,.25);" title="सभी शिक्षक विरोध पहा">❌ Errors</button>
+      <button class="nb" onclick="SP('aiassist',this)" style="background:rgba(52,152,219,.25);" title="AI सहायक - स्वतः तास भरा">🤖 AI Assistant</button>
+      <div style="width:1px;background:rgba(255,255,255,.2);margin:0 4px;align-self:stretch;"></div>
+      <button class="nb" onclick="quickSave()" style="background:rgba(39,174,96,.35);" title="Data backup file download करा">💾 Save Data</button>
+      <button class="nb" onclick="quickLoad()" style="background:rgba(231,76,60,.35);" title="Backup file upload करून data restore करा">📂 Load Data</button>
+    </nav>
+    <input type="file" id="qlImpF" accept=".json" style="display:none;" onchange="doQLImp(event)">
+  </div>
+</header>
+<div class="app">
+<!-- SETUP -->
+<div id="page-setup" class="page active">
+  <div class="tab-bar">
+    <button class="tab active" onclick="ST2('ts',this)">🏫 Settings</button>
+    <button class="tab" onclick="ST2('tt2',this)">👨‍🏫 Teachers</button>
+    <button class="tab" onclick="ST2('tc2',this)">🏛️ Classes</button>
+    <button class="tab" onclick="ST2('tsub2',this)">📚 Subjects</button>
+  </div>
+  <div id="ts">
+    <div class="card"><div class="ct">⏰ Schedule</div>
+      <div class="fg">
+        <div><label>Assembly Time</label><input type="time" id="assemblyTime" value="07:15"></div>
+        <div><label>Assembly Duration (min)</label><input type="number" id="assemblyDuration" value="15" min="5" max="30"></div>
+        <div><label>School Start Time</label><input type="time" id="startTime" value="07:30"></div>
+        <div><label>Periods/Day (Normal)</label><input type="number" id="numPeriods" value="9" min="4" max="12"></div>
+        <div><label>Wed & Sat Periods</label><input type="number" id="shortDayPeriods" value="6" min="4" max="9"><small style="color:var(--mu);font-size:.64rem;">Abhyasika नाही</small></div>
+        <div><label>Period Duration (min)</label><input type="number" id="periodDuration" value="45" min="30" max="90"></div>
+        <div><label>Short Break After P#</label><input type="number" id="shortBreakAfter" value="3" min="1" max="9"></div>
+        <div><label>Short Break (min)</label><input type="number" id="shortBreakDuration" value="15" min="5" max="30"></div>
+        <div><label>Lunch After P#</label><input type="number" id="lunchBreakAfter" value="6" min="1" max="12"></div>
+        <div><label>Lunch (min)</label><input type="number" id="lunchBreakDuration" value="90" min="15" max="120"></div>
+        <div><label>Abhyasika (min)</label><input type="number" id="studyDuration" value="65" min="0" max="120"></div>
+        <div><label>Abhyasika Break (min)</label><input type="number" id="studyBreakDuration" value="10" min="0" max="30"></div>
+        <div><label>Theory Period Limit (P1–?)</label><input type="number" id="subjectPeriodLimit" value="6" min="1" max="12"><small style="color:var(--mu);font-size:.64rem;">P7+ = Activity preferably</small></div>
+        <div><label>Max Warning Periods/Teacher</label><input type="number" id="maxTeacherPeriods" value="36" min="10" max="60"><small style="color:var(--mu);font-size:.64rem;">Exceeded = warning only, no block</small></div>
+        <div><label>मुख्याध्यापक नाव</label><input type="text" id="mukhyadhyapakName" placeholder="नाव"></div>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+        <button class="btn bp" onclick="saveS()">💾 Save</button>
+        <span id="sv" style="color:var(--ok);font-size:.74rem;display:none;">✓ Saved!</span>
+      </div>
+      <div id="prevA" style="margin-top:11px;"></div>
+    </div>
+    <div class="card"><div class="ct">☁️ Cloud Sync (Google Sheet)</div>
+      <div class="ib">📌 सर्व शिक्षकांनी एकाच Google Sheet शी जोडलेले राहिल्यास, प्रत्येकाने स्वतःच्या वर्गाचा डेटा cloud ला पाठवू शकतो आणि इतरांचा latest डेटा download करू शकतो.</div>
+      <div class="fg">
+        <div style="grid-column:1/-1;"><label>Cloud Sync URL (Apps Script Web App URL)</label>
+          <input type="text" id="cloudUrl" placeholder="https://script.google.com/macros/s/.../exec"></div>
+        <div><label>आपले नाव (Updated By)</label><input type="text" id="cloudUserName" placeholder="उदा. Anis Momin"></div>
+      </div>
+      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">
+        <button class="btn bp" onclick="saveCloudSettings()">💾 URL Save करा</button>
+        <span id="cloudSv" style="color:var(--ok);font-size:.74rem;display:none;">✓ Saved!</span>
+        <button class="btn bk" onclick="cloudDownloadAll()">☁️⬇️ सर्व डेटा Cloud वरून आणा</button>
+      </div>
+      <div id="cloudStatus" style="margin-top:8px;font-size:.74rem;color:var(--mu);"></div>
+    </div>
+    <div class="card"><div class="ct">📅 Working Days</div>
+      <div style="display:flex;gap:11px;flex-wrap:wrap;" id="wdDays">
+        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:.84rem;"><input type="checkbox" value="Monday" checked> Mon</label>
+        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:.84rem;"><input type="checkbox" value="Tuesday" checked> Tue</label>
+        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:.84rem;"><input type="checkbox" value="Wednesday" checked> Wed</label>
+        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:.84rem;"><input type="checkbox" value="Thursday" checked> Thu</label>
+        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:.84rem;"><input type="checkbox" value="Friday" checked> Fri</label>
+        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:.84rem;"><input type="checkbox" value="Saturday" checked> Sat</label>
+      </div>
+    </div>
+  </div>
+  <div id="tt2" style="display:none;">
+    <div class="card"><div class="ct">➕ Add Teacher</div>
+      <div class="fg">
+        <div><label>Name</label><input type="text" id="tname" placeholder="Rajesh Patil"></div>
+        <div><label>Code (max 5)</label><input type="text" id="tcode" placeholder="RP" maxlength="5"></div>
+        <div><label>Phone</label><input type="text" id="tphone" placeholder="9876543210"></div>
+      </div>
+      <div style="margin-top:8px;">
+        <div class="fl" style="margin-bottom:4px;">Subjects (एकापेक्षा जास्त निवडता येतात)</div>
+        <div id="tsubjCB" style="display:flex;flex-wrap:wrap;gap:6px;padding:8px;background:var(--lt);border-radius:7px;border:1.5px solid var(--bd);min-height:36px;">
+          <span style="font-size:.72rem;color:var(--mu);">— आधी Subjects tab मध्ये subjects add करा —</span>
+        </div>
+      </div>
+      <div style="margin-top:9px;"><button class="btn bp" onclick="addTeacher()">➕ Add</button></div>
+    </div>
+    <div class="card">
+      <div class="sh"><div class="ct" style="margin-bottom:0;">Teachers (<span id="tcount">0</span>)</div>
+        <input type="text" id="tsearch" onkeyup="renderTeachers()" placeholder="Search..." style="padding:4px 8px;border:1.5px solid var(--bd);border-radius:6px;font-size:.76rem;outline:none;"></div>
+      <div class="ttw"><table class="dt"><thead><tr><th>#</th><th>Name</th><th>Code</th><th>Subjects</th><th>Weekly Load</th><th></th></tr></thead>
+      <tbody id="tbody-t"></tbody></table></div>
+      <div id="empty-t" class="es"><p>👨‍🏫 No teachers yet.</p></div>
+    </div>
+  </div>
+  <div id="tc2" style="display:none;">
+    <div class="card"><div class="ct">➕ Add Class</div>
+      <div class="ib">📌 6 Tukdya: A,B = Marathi | C,D,E,F = Semi-English — "Add 6 Divisions" button वापरा.</div>
+      <div class="fg">
+        <div><label>Standard</label><select id="cstd"><option>1st</option><option>2nd</option><option>3rd</option><option>4th</option><option>5th</option><option>6th</option><option>7th</option><option>8th</option><option selected>9th</option><option>10th</option><option>11th</option><option>12th</option></select></div>
+        <div><label>Division</label><input type="text" id="cdiv" placeholder="A" maxlength="3"></div>
+        <div><label>Medium</label><select id="cmed"><option>Marathi</option><option>Semi-English</option><option>English</option></select></div>
+        <div><label>Class Teacher</label><select id="cct"></select></div>
+      </div>
+      <div style="display:flex;gap:7px;margin-top:8px;flex-wrap:wrap;">
+        <button class="btn bp" onclick="addClass()">➕ Add One</button>
+        <button class="btn bi" onclick="addStdDivs()">⚡ Add 6 Divisions (A–F)</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ct">Classes (<span id="ccount">0</span>)</div>
+      <div class="ttw"><table class="dt"><thead><tr><th>#</th><th>Std</th><th>Div</th><th>Medium</th><th>Class Teacher (click to change)</th><th></th></tr></thead>
+      <tbody id="tbody-c"></tbody></table></div>
+      <div id="empty-c" class="es"><p>🏛️ No classes yet.</p></div>
+    </div>
+  </div>
+  <div id="tsub2" style="display:none;">
+    <div class="card"><div class="ct">➕ Add Subject</div>
+      <div class="ib">📌 <strong>preferred_late=true</strong> असलेले विषय P7-9 मध्ये prefer होतात (Art, PE, etc.) पण गरज असल्यास P1-6 मध्ये पण येऊ शकतात.</div>
+      <div class="fg">
+        <div><label>Name</label><input type="text" id="sname" placeholder="Mathematics"></div>
+        <div><label>Code (max 6)</label><input type="text" id="scode" placeholder="MATH" maxlength="6"></div>
+        <div><label>Type</label><select id="stype">
+          <option value="theory">📖 Theory (P1–6 prefer)</option>
+          <option value="practical">🎨 Practical (P7-9 prefer)</option>
+          <option value="any">📌 Any Period</option>
+        </select></div>
+        <div><label>Priority (high = more daily)</label><select id="spriority">
+          <option value="normal">Normal</option>
+          <option value="high">⭐ High (Science/Math/Eng)</option>
+        </select></div>
+        <div><label>Color</label><input type="color" id="scolor" value="#3498db"></div>
+      </div>
+      <div style="margin-top:7px;"><button class="btn bp" onclick="addSubject()">➕ Add</button></div>
+    </div>
+    <div class="card">
+      <div class="ct">Subjects</div>
+      <div id="subj-list" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+      <div id="empty-s" class="es"><p>📚 No subjects yet.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- CLASS SUBJECTS -->
+<div id="page-assign" class="page">
+  <div class="card"><div class="ct">📋 Class-wise Subject Assignment</div>
+    <div class="ib">प्रत्येक वर्ग-तुकडीसाठी विषय, शिक्षक, periods/week assign करा.</div>
+    <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:12px;">
+      <div><div class="fl">Class</div><select id="asel" class="fi" style="min-width:200px;" onchange="renderAssign()"><option value="">-- Select --</option></select></div>
+      <button class="btn bp" onclick="saveAssign()">💾 Save</button>
+      <button class="btn bi" onclick="copyFrom()">📋 Copy from...</button>
+      <span id="asv" style="color:var(--ok);font-size:.74rem;display:none;">✓ Saved!</span>
+    </div>
+    <div id="aarea"><div class="es"><p>📋 Select a class.</p></div></div>
+  </div>
+</div>
+
+<!-- EDITOR -->
+<div id="page-editor" class="page">
+  <div class="card" style="background:linear-gradient(135deg,#1a3a5c,#2471a3);">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px;">
+      <div>
+        <div style="color:#fff;font-weight:700;font-size:.92rem;">🏫 सर्व वर्गांचे Timetable एकत्र तयार करा</div>
+        <div style="color:#cfe3f5;font-size:.74rem;margin-top:2px;">एका क्रमाने (इयत्तानुसार) सर्व वर्ग generate होतात — प्रत्येक वर्ग आधीच्या सर्व वर्गांचा timetable लक्षात घेऊन तयार होतो, त्यामुळे एकाच शिक्षकाचा दोन वर्गांत वेळेचा गोंधळ होत नाही.</div>
+      </div>
+      <button class="btn bg2" onclick="autoFillAllClasses()" style="white-space:nowrap;">⚡⚡ सर्व वर्ग Auto-Generate</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">📅 Timetable Editor (एक वर्ग)</div>
+    <div id="tlw"></div>
+    <div style="display:flex;gap:7px;align-items:flex-end;flex-wrap:wrap;margin-bottom:11px;">
+      <div><div class="fl">Class</div><select id="ttsel" class="fi" style="min-width:200px;" onchange="loadEditor()"><option value="">-- Select --</option></select></div>
+      <button class="btn bg2" onclick="autoFill()">⚡ Auto-Generate (हाच वर्ग)</button>
+      <button class="btn bo" onclick="clearTT()">🗑️ Clear</button>
+      <button class="btn bp" onclick="saveTT()">💾 Save</button>
+      <button class="btn bk" onclick="cloudUploadClass()">☁️⬆️ हा वर्ग Cloud ला पाठवा</button>
+    </div>
+    <div id="cflts"></div>
+    <div id="ttarea"><div class="es"><p>📅 Select a class.</p></div></div>
+  </div>
+</div>
+
+<!-- VIEW -->
+<div id="page-view" class="page">
+  <div class="tab-bar">
+    <button class="tab active" onclick="SVT('vc',this)">🏛️ Class View</button>
+    <button class="tab" onclick="SVT('vt',this)">👨‍🏫 Teacher View</button>
+  </div>
+  <div id="vc"><div class="card">
+    <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:11px;">
+      <div><div class="fl">Class</div><select id="vcsel" class="fi" style="min-width:200px;" onchange="renderCV()"><option value="">-- Select --</option></select></div>
+    </div>
+    <div id="cva"><div class="es"><p>🏛️ Select a class.</p></div></div>
+  </div></div>
+  <div id="vt" style="display:none;"><div class="card">
+    <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:11px;">
+      <div><div class="fl">Teacher</div><select id="vtsel" class="fi" style="min-width:200px;" onchange="renderTV()"><option value="">-- Select --</option></select></div>
+    </div>
+    <div id="tva"><div class="es"><p>👨‍🏫 Select a teacher.</p></div></div>
+  </div></div>
+</div>
+
+<!-- PRINT -->
+<div id="page-print" class="page">
+  <div class="card"><div class="ct">🖨️ Print Options</div>
+    <div class="ib" style="margin-bottom:13px;">
+      <strong>Print Layout:</strong> पहिला col = वेळ (AM/PM) | मध्ये = Mon–Sat | शेवटचा col = विषय शिक्षक<br>
+      वर = शाळा + वर्ग + तुकडी + वर्गशिक्षक | खाली = वर्गशिक्षक सही (डावी) + मुख्याध्यापक सही (उजवी)<br>
+      🗓️ एकत्रित print: Mon(9 sub-cols) Tue(9) Wed(9) | शिक्षक नावे | Thu(9) Fri(9) Sat(9) — A3 paper
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:11px;">
+      <div style="border:1.5px solid var(--bd);border-radius:9px;padding:13px;">
+        <div style="font-weight:700;color:var(--pr);font-size:.86rem;margin-bottom:5px;">🏫 वर्गानुसार (A4)</div>
+        <div style="font-size:.73rem;color:var(--mu);margin-bottom:9px;">प्रत्येक वर्गासाठी स्वतंत्र page</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+          <button class="btn bp" onclick="pClass('all')">🖨️ सर्व वर्ग</button>
+          <select id="pCSel" style="padding:4px 7px;border:1.5px solid var(--bd);border-radius:5px;font-size:.75rem;"><option value="">एक वर्ग...</option></select>
+          <button class="btn bo bs" onclick="pClass('one')">🖨️</button>
+        </div>
+      </div>
+      <div style="border:1.5px solid var(--bd);border-radius:9px;padding:13px;">
+        <div style="font-weight:700;color:var(--pr);font-size:.86rem;margin-bottom:5px;">👨‍🏫 शिक्षकानुसार (A4)</div>
+        <div style="font-size:.73rem;color:var(--mu);margin-bottom:9px;">प्रत्येक शिक्षकासाठी स्वतंत्र page + Abhyasika</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+          <button class="btn bi" onclick="pTeacher('all')">🖨️ सर्व शिक्षक</button>
+          <select id="pTSel" style="padding:4px 7px;border:1.5px solid var(--bd);border-radius:5px;font-size:.75rem;"><option value="">एक शिक्षक...</option></select>
+          <button class="btn bo bs" onclick="pTeacher('one')">🖨️</button>
+        </div>
+      </div>
+      <div style="border:1.5px solid var(--bd);border-radius:9px;padding:13px;">
+        <div style="font-weight:700;color:var(--pr);font-size:.86rem;margin-bottom:5px;">📊 एकत्रित शाळा (A3)</div>
+        <div style="font-size:.73rem;color:var(--mu);margin-bottom:9px;">Mon–Wed | Teachers | Thu–Sat layout</div>
+        <button class="btn bg2" onclick="pSchool()">🖨️ संपूर्ण शाळा</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REPORTS -->
+<div id="page-reports" class="page">
+  <div class="tab-bar">
+    <button class="tab active" onclick="SRT('rl',this)">👨‍🏫 Teacher Load</button>
+    <button class="tab" onclick="SRT('rs',this)">📚 Subject Cover</button>
+    <button class="tab" onclick="SRT('rf',this)">🕐 Free Periods</button>
+    <button class="tab" onclick="SRT('re',this)">📤 Export</button>
+  </div>
+  <div id="rl"><div class="card"><div class="sh"><div class="ct" style="margin-bottom:0;">👨‍🏫 Teacher Load</div><div style="display:flex;gap:8px;"><button class="btn bk" onclick="rLoad()">🔄 Refresh</button><button class="btn bp" onclick="printReport('loadRep','Teacher_Load')">🖨️ Print</button></div></div><div id="loadRep"></div></div></div>
+  <div id="rs" style="display:none;"><div class="card"><div class="sh"><div class="ct" style="margin-bottom:0;">📚 Subject Coverage</div><div style="display:flex;gap:8px;"><button class="btn bk" onclick="rSubj()">🔄 Refresh</button><button class="btn bp" onclick="printReport('subjRep','Subject_Coverage')">🖨️ Print</button></div></div><div id="subjRep"></div></div></div>
+  <div id="rf" style="display:none;"><div class="card"><div class="sh"><div class="ct" style="margin-bottom:0;">🕐 Free Periods</div><div style="display:flex;gap:8px;"><button class="btn bk" onclick="rFree()">🔄 Refresh</button><button class="btn bp" onclick="printReport('freeRep','Free_Periods')">🖨️ Print</button></div></div><div id="freeRep"></div></div></div>
+  <div id="re" style="display:none;"><div class="card"><div class="ct">📤 Export</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn bp" onclick="expJSON()">📥 JSON Backup</button>
+      <button class="btn bk" onclick="expCSV()">📊 CSV</button>
+      <button class="btn bg2" onclick="impJSON()">📤 Import JSON</button>
+    </div>
+    <input type="file" id="impF" accept=".json" style="display:none;" onchange="doImp(event)">
+  </div></div>
+</div>
+
+<!-- ERRORS -->
+<div id="page-errors" class="page">
+  <div class="card">
+    <div class="sh">
+      <div class="ct">❌ शिक्षक विरोध (Teacher Conflicts)</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn bk" onclick="refreshErrors()">🔄 Refresh</button>
+        <button class="btn bp" onclick="printErrors()">🖨️ Print</button>
+      </div>
+    </div>
+    <div id="errorsContainer" style="max-height:600px;overflow-y:auto;">
+      <div style="text-align:center;color:#999;padding:20px;">
+        <p>कोणीही विरोध नाहीत! ✅</p>
+        <p style="font-size:12px;">Auto-Generate केल्यानंतर विरोध येथे दिसतील।</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AI ASSISTANT -->
+<div id="page-aiassist" class="page">
+  <div class="card">
+    <div class="sh">
+      <div class="ct">🤖 AI Assistant - Auto Timetable Generator</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn bk" onclick="analyzeGaps()">🔍 Analyze Gaps</button>
+        <button class="btn bg2" onclick="aiAutoFill()">✨ AI Auto-Fill</button>
+        <button class="btn bo" onclick="clearAIAnalysis()">🔄 Reset</button>
+      </div>
+    </div>
+    <div style="padding:15px;">
+      <div id="aiOutput" style="max-height:700px;overflow-y:auto;">
+        <div style="text-align:center;color:#999;padding:20px;">
+          <p>🤖 AI Assistant तयार आहे!</p>
+          <p style="font-size:12px;color:#aaa;">Click "Analyze Gaps" to find missing subjects</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- .app -->
+
+<!-- MODAL: Period -->
+<div class="mo" id="modP">
+  <div class="md">
+    <button class="mc" onclick="closeMod()">✕</button>
+    <h3>📝 Assign Period</h3>
+    <div id="minfo" style="margin-bottom:8px;font-size:.75rem;color:var(--mu);background:var(--lt);padding:5px 8px;border-radius:5px;"></div>
+    <div id="mrest" style="display:none;margin-bottom:7px;"></div>
+    <div id="mcth" style="display:none;margin-bottom:7px;" class="ib"></div>
+    <div style="margin-bottom:8px;"><label class="fl">Subject</label>
+      <select id="msubj" class="fi" onchange="onSC()"></select></div>
+    <div style="margin-bottom:8px;"><label class="fl">Teacher</label>
+      <select id="mteach" class="fi" onchange="chkMC()"></select></div>
+    <div id="mcfl" style="display:none;margin-bottom:6px;"></div>
+    <div id="mload" style="display:none;margin-bottom:6px;"></div>
+    <div id="mperiodcount" style="display:none;margin-bottom:6px;font-size:.75rem;font-weight:600;padding:4px 8px;background:var(--lt);border-radius:5px;"></div>
+    <div style="margin-bottom:10px;">
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.78rem;">
+        <input type="checkbox" id="mdbl" onchange="updDbl()"> 🔗 Double Period
+      </label>
+    </div>
+    <div id="dblmsg" style="display:none;margin-bottom:7px;"></div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+      <button class="btn bp" onclick="assignP()">✅ Assign</button>
+      <button class="btn bd2" onclick="clearP()">🗑️ Clear</button>
+      <button class="btn bo" onclick="closeMod()">Cancel</button>
+    </div>
+  </div>
+</div>
+<!-- MODAL: Copy -->
+<div class="mo" id="modCp">
+  <div class="md" style="max-width:360px;">
+    <button class="mc" onclick="document.getElementById('modCp').classList.remove('show')">✕</button>
+    <h3>📋 Copy Assignment</h3>
+    <div style="margin-bottom:10px;"><label class="fl">Copy FROM</label>
+    <select id="cpFrom" class="fi"></select></div>
+    <div style="display:flex;gap:5px;">
+      <button class="btn bp" onclick="doCopy()">✅ Copy</button>
+      <button class="btn bo" onclick="document.getElementById('modCp').classList.remove('show')">Cancel</button>
+    </div>
+  </div>
+</div>
+<script>
+// ===== STATE =====
+let D={teachers:[],classes:[],subjects:[],TT:{},CS:{},
+  cfg:{assemblyTime:'07:15',assemblyDuration:15,mukhyadhyapakName:'',
+    startTime:'07:30',numPeriods:9,shortDayPeriods:6,periodDuration:45,
+    shortBreakAfter:3,shortBreakDuration:15,lunchBreakAfter:6,lunchBreakDuration:90,
+    studyDuration:65,studyBreakDuration:10,subjectPeriodLimit:6,maxTeacherPeriods:36,
+    workingDays:['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']}};
+let CM={cid:null,day:null,p:null};
+
+const KEY='wvs7';
+function load(){const s=localStorage.getItem(KEY);if(s)try{D=JSON.parse(s);}catch(e){}applyS();}
+function save(){localStorage.setItem(KEY,JSON.stringify(D));}
+
+// ===== TOAST =====
+function toast(m,t='success',d=3200){const e=document.getElementById('toast');e.textContent=m;e.className='toast '+t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),d);}
+
+// ===== TIME =====
+function t2m(t){if(!t)return 0;const[h,mn]=t.split(':').map(Number);return h*60+mn;}
+function m2t(m){return`${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;}
+function m2t12(m){let h=Math.floor(m/60),mn=m%60,ap=h>=12?'PM':'AM';h=h%12||12;return`${h}:${String(mn).padStart(2,'0')} ${ap}`;}
+function isShort(d){return d==='Wednesday'||d==='Saturday';}
+function maxP(day){return isShort(day)?+(D.cfg.shortDayPeriods||6):+(D.cfg.numPeriods||9);}
+function getGrp(p){return p<=3?'A':p<=6?'B':'C';}
+function sameGrp(a,b){return getGrp(a)===getGrp(b);}
+
+// All period start/end times (full day, 9 periods)
+function getPTimes(){
+  const c=D.cfg;const n=+(c.numPeriods||9);let cur=t2m(c.startTime||'07:30');const arr=[];
+  for(let i=1;i<=n;i++){
+    arr.push({p:i,s:m2t(cur),e:m2t(cur+(+c.periodDuration||45))});
+    cur+=+(c.periodDuration||45);
+    if(i===+(c.shortBreakAfter||3))cur+=+(c.shortBreakDuration||15);
+    if(i===+(c.lunchBreakAfter||6)){cur+=(+(c.lunchBreakDuration||90))+(+(c.studyDuration||65))+(+(c.studyBreakDuration||10));}
+  }
+  return arr;
+}
+
+// Build ordered row list (rows = time slots in day)
+function buildRows(day){
+  const c=D.cfg;const mp=maxP(day);const isS=isShort(day);
+  const ptAll=getPTimes().filter(x=>x.p<=mp);const lb=+(c.lunchBreakAfter||6);const sb=+(c.shortBreakAfter||3);
+  const rows=[];
+  ptAll.forEach(pt=>{
+    rows.push({type:'p',pt});
+    if(pt.p===sb&&pt.p<mp){
+      const s=m2t(t2m(pt.e));rows.push({type:'sb',s,e:m2t(t2m(s)+(+c.shortBreakDuration||15)),dur:+(c.shortBreakDuration||15)});}
+    if(pt.p===lb&&pt.p<=mp){
+      const ls=m2t(t2m(pt.e));const ld=+(c.lunchBreakDuration||90);
+      rows.push({type:'lb',s:ls,e:m2t(t2m(ls)+ld),dur:ld});
+      if(!isS&&+(c.studyDuration||0)>0){const as=m2t(t2m(ls)+ld);rows.push({type:'ab',s:as,e:m2t(t2m(as)+(+c.studyDuration)),dur:+(c.studyDuration)});}
+      if(!isS&&+(c.studyBreakDuration||0)>0){const bst=m2t(t2m(ls)+ld+(+(c.studyDuration||0)));rows.push({type:'abr',s:bst,e:m2t(t2m(bst)+(+c.studyBreakDuration)),dur:+(c.studyBreakDuration)});}
+    }
+  });
+  return rows;
+}
+// Full rows = non-short day rows (for column structure)
+function fullRows(){return buildRows('Monday');}
+
+// ===== NAV =====
+function SP(n,b){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+n).classList.add('active');
+  document.querySelectorAll('.nb').forEach(x=>x.classList.remove('active'));if(b)b.classList.add('active');
+  if(n==='assign'){popSel('asel');renderAssign();}
+  if(n==='editor'){popSel('ttsel');checkLoads();}
+  if(n==='view'){popSel('vcsel');popSelT('vtsel');}
+  if(n==='print'){ppSels();}
+  if(n==='reports')rLoad();
+}
+function ST2(id,b){['ts','tt2','tc2','tsub2'].forEach(x=>{const e=document.getElementById(x);if(e)e.style.display='none';});
+  document.getElementById(id).style.display='block';
+  document.querySelectorAll('#page-setup .tab-bar .tab').forEach(t=>t.classList.remove('active'));if(b)b.classList.add('active');
+  if(id==='tt2'){popSubjSel();renderTeachers();}if(id==='tc2'){popCTSel();renderClasses();}if(id==='tsub2')renderSubjects();}
+function SVT(id,b){['vc','vt'].forEach(x=>document.getElementById(x).style.display='none');
+  document.getElementById(id).style.display='block';
+  document.querySelectorAll('#page-view .tab').forEach(t=>t.classList.remove('active'));if(b)b.classList.add('active');}
+function SRT(id,b){['rl','rs','rf','re'].forEach(x=>document.getElementById(x).style.display='none');
+  document.getElementById(id).style.display='block';
+  document.querySelectorAll('#page-reports .tab').forEach(t=>t.classList.remove('active'));if(b)b.classList.add('active');
+  if(id==='rl')rLoad();if(id==='rs')rSubj();if(id==='rf')rFree();}
+
+function popSel(id){const e=document.getElementById(id);if(!e)return;
+  e.innerHTML='<option value="">-- Select --</option>'+D.classes.map(c=>`<option value="${c.id}">${c.std}-${c.division} (${c.medium})</option>`).join('');}
+function popSelT(id){const e=document.getElementById(id);if(!e)return;
+  e.innerHTML='<option value="">-- Select --</option>'+D.teachers.map(t=>`<option value="${t.id}">${t.name} (${t.code})</option>`).join('');}
+function popSubjSel(){
+  // Checkboxes for teacher add form
+  const cb=document.getElementById('tsubjCB');
+  if(cb){
+    if(!D.subjects.length){cb.innerHTML='<span style="font-size:.72rem;color:var(--mu);">— आधी Subjects tab मध्ये subjects add करा —</span>';return;}
+    cb.innerHTML=D.subjects.map(s=>`<label style="display:flex;align-items:center;gap:4px;cursor:pointer;padding:3px 8px;background:${s.color}14;border:1.5px solid ${s.color}44;border-radius:20px;font-size:.74rem;">
+      <input type="checkbox" class="tsCB" value="${s.id}">
+      <span style="width:8px;height:8px;border-radius:50%;background:${s.color};display:inline-block;flex-shrink:0;"></span>
+      <strong style="color:${s.color};">${s.code}</strong> ${s.name}
+    </label>`).join('');
+  }
+}
+function popCTSel(){const e=document.getElementById('cct');if(e)e.innerHTML='<option value="">-- None --</option>'+D.teachers.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');}
+function ppSels(){
+  const pc=document.getElementById('pCSel');if(pc)pc.innerHTML='<option value="">एक वर्ग...</option>'+D.classes.map(c=>`<option value="${c.id}">${c.std}-${c.division}</option>`).join('');
+  const pt=document.getElementById('pTSel');if(pt)pt.innerHTML='<option value="">एक शिक्षक...</option>'+D.teachers.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');}
+
+// ===== SETTINGS =====
+function applyS(){
+  const c=D.cfg;
+  ['assemblyTime','startTime','mukhyadhyapakName'].forEach(id=>{const e=document.getElementById(id);if(e&&c[id]!==undefined)e.value=c[id];});
+  ['assemblyDuration','numPeriods','shortDayPeriods','periodDuration','shortBreakAfter','shortBreakDuration',
+   'lunchBreakAfter','lunchBreakDuration','studyDuration','studyBreakDuration','subjectPeriodLimit','maxTeacherPeriods'].forEach(id=>{
+    const e=document.getElementById(id);if(e&&c[id]!==undefined)e.value=c[id];});
+  if(c.workingDays)document.querySelectorAll('#wdDays input').forEach(cb=>cb.checked=c.workingDays.includes(cb.value));
+  const cuE=document.getElementById('cloudUrl');if(cuE)cuE.value=c.cloudUrl||'';
+  const cnE=document.getElementById('cloudUserName');if(cnE)cnE.value=c.cloudUserName||'';
+  renderPrev();
+}
+function saveS(){
+  const c=D.cfg;
+  ['assemblyTime','startTime','mukhyadhyapakName'].forEach(id=>{const e=document.getElementById(id);if(e)c[id]=e.value;});
+  ['assemblyDuration','numPeriods','shortDayPeriods','periodDuration','shortBreakAfter','shortBreakDuration',
+   'lunchBreakAfter','lunchBreakDuration','studyDuration','studyBreakDuration','subjectPeriodLimit','maxTeacherPeriods'].forEach(id=>{
+    const e=document.getElementById(id);if(e)c[id]=Math.max(0,+e.value);});
+  c.lunchBreakDuration=Math.min(120,Math.max(15,c.lunchBreakDuration));
+  c.workingDays=[];document.querySelectorAll('#wdDays input:checked').forEach(cb=>c.workingDays.push(cb.value));
+  save();const sv=document.getElementById('sv');sv.style.display='inline';setTimeout(()=>sv.style.display='none',2000);
+  renderPrev();toast('Settings saved!');
+}
+// ===== CLOUD SYNC (Google Sheet via Apps Script) =====
+function saveCloudSettings(){
+  const url=document.getElementById('cloudUrl').value.trim();
+  const name=document.getElementById('cloudUserName').value.trim();
+  D.cfg.cloudUrl=url;
+  D.cfg.cloudUserName=name;
+  save();
+  const el=document.getElementById('cloudSv');el.style.display='inline';setTimeout(()=>el.style.display='none',2000);
+  toast('Cloud settings saved!');
+}
+function cloudStatus(msg,isError){
+  const el=document.getElementById('cloudStatus');
+  if(el){el.textContent=msg;el.style.color=isError?'#e74c3c':'#7f8c8d';}
+}
+// Upload ONLY the currently-selected class's data (timetable + its subject
+// assignments) to the shared Google Sheet — does not touch other classes.
+// ── Cloud helper: submit data via hidden form (avoids CORS entirely) ──
+// Apps Script POST via fetch is blocked by browser CORS. Using a hidden
+// form submit sidesteps this — but we can't read the response.
+// For upload we use a GET request with the JSON embedded as a URL param
+// (encoded). Apps Script reads it from e.parameter.data.
+async function cloudUploadClass(){
+  const cid=document.getElementById('ttsel')?.value;
+  if(!cid)return toast('आधी वर्ग select करा!','error');
+  const url=D.cfg.cloudUrl;
+  if(!url)return toast('आधी Setup → Cloud Sync मध्ये URL टाका!','error');
+  const userName=D.cfg.cloudUserName||'Unknown';
+  const cls=D.classes.find(c=>c.id===cid);
+  const payload={classId:cid,updatedBy:userName,data:{
+    classInfo:cls,timetable:D.TT[cid]||{},classSubjects:D.CS[cid]||[],
+    subjects:D.subjects,teachers:D.teachers,cfg:D.cfg
+  }};
+
+  cloudStatus('⏳ पाठवत आहे...',false);
+  toast('Cloud ला पाठवत आहे...','warn',2000);
+
+  // Strategy: use fetch with no-cors for the actual save (fire-and-forget),
+  // then confirm via a follow-up GET check.
+  try{
+    // Try 1: standard fetch with no-cors (upload goes through, response opaque)
+    try{
+      await fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+      cloudStatus(`✅ ${cls?.std}-${cls?.division} पाठवले — ${new Date().toLocaleString('en-IN')}`,false);
+      toast('✅ Cloud ला पाठवले!');
+      return;
+    }catch(fetchErr){/* fall through to GET method */}
+
+    // Try 2: GET request with encoded data (bypasses CORS completely)
+    // Data is sent as URL parameter — Apps Script reads e.parameter.data
+    const encoded=encodeURIComponent(JSON.stringify({...payload,action:'save'}));
+    const getUrl=url+'?action=save&classId='+encodeURIComponent(cid)+'&updatedBy='+encodeURIComponent(userName)+'&data='+encodeURIComponent(JSON.stringify(payload.data));
+    try{
+      const res2=await fetch(getUrl,{method:'GET',mode:'cors'});
+      const result2=await res2.json();
+      if(result2.ok){
+        cloudStatus(`✅ ${cls?.std}-${cls?.division} पाठवले — ${new Date().toLocaleString('en-IN')}`,false);
+        toast('✅ Cloud ला पाठवले!');
+        return;
+      }
+    }catch(getErr){/* fall through to error */}
+
+    cloudStatus('❌ Cloud ला पाठवता आले नाही — URL तपासा. Manual Export वापरा (Reports tab).',true);
+    toast('❌ Cloud error — Reports → JSON Export वापरा','error',6000);
+  } catch(err){
+    cloudStatus('❌ '+err.message,true);
+    toast('❌ Cloud error','error',5000);
+  }
+}
+// Download ALL classes' data from the shared Google Sheet and merge it into
+// the local app (overwrites local timetables/subjects/teachers with cloud's
+// latest version — this is how a new device/browser gets the full school data).
+async function cloudDownloadAll(){
+  const url=D.cfg.cloudUrl;
+  if(!url)return toast('आधी Setup → Cloud Sync मध्ये URL टाका!','error');
+  if(!confirm('Cloud वरून सर्व डेटा आणायचा? यामुळे सध्याचा local डेटा cloud च्या latest डेटाने बदलला जाईल.'))return;
+
+  cloudStatus('⏳ डाउनलोड होत आहे...',false);
+  toast('Cloud वरून डेटा आणत आहे...','warn',3000);
+  try{
+    // GET with cors mode — Apps Script GET requests allow CORS when deployed as "Anyone"
+    const res=await fetch(url+'?t='+Date.now(),{method:'GET',mode:'cors'});
+    const result=await res.json();
+    if(result.error){
+      cloudStatus('❌ Error: '+result.error,true);
+      return toast('❌ डाउनलोड करताना अडचण','error');
+    }
+    const classIds=Object.keys(result.classes||{});
+    if(!classIds.length){
+      cloudStatus('ℹ️ Cloud मध्ये अजून कोणताही डेटा नाही.',false);
+      return toast('Cloud मध्ये डेटा सापडला नाही','warn');
+    }
+    // Merge: for each class found in cloud, update its timetable + classSubjects.
+    // Also merge subjects/teachers lists (union by id, cloud's newer entries win).
+    let latestSubjects=null,latestTeachers=null,latestClasses=[];
+    classIds.forEach(cid=>{
+      const entry=result.classes[cid];
+      const d=entry.data;
+      if(!d)return;
+      D.TT[cid]=d.timetable||{};
+      D.CS[cid]=d.classSubjects||[];
+      if(d.classInfo)latestClasses.push(d.classInfo);
+      if(d.subjects)latestSubjects=d.subjects; // assume same shared list across classes
+      if(d.teachers)latestTeachers=d.teachers;
+    });
+    if(latestSubjects)D.subjects=latestSubjects;
+    if(latestTeachers)D.teachers=latestTeachers;
+    // Merge classes: keep existing local classes, add/update any from cloud
+    latestClasses.forEach(cls=>{
+      const idx=D.classes.findIndex(c=>c.id===cls.id);
+      if(idx>=0)D.classes[idx]=cls;else D.classes.push(cls);
+    });
+    save();
+    cloudStatus(`✅ ${classIds.length} वर्गांचा डेटा यशस्वीरित्या आणला — ${new Date().toLocaleString('en-IN')}`,false);
+    toast(`✅ ${classIds.length} वर्गांचा डेटा download झाला!`,'success',5000);
+    // Refresh all UI
+    renderTeachers();renderClasses();renderSubjects();popSubjSel();popCTSel();
+    if(document.getElementById('ttsel'))popSel('ttsel');
+    if(document.getElementById('ttsel')?.value)loadEditor();
+  } catch(err){
+    cloudStatus('❌ Connection error: '+err.message,true);
+    toast('❌ Cloud शी जोडता आले नाही — URL तपासा','error',5000);
+  }
+}
+
+function renderPrev(){
+  const c=D.cfg;const aS=m2t12(t2m(c.assemblyTime||'07:15'));const aE=m2t12(t2m(c.assemblyTime||'07:15')+(+(c.assemblyDuration||15)));
+  const rows=buildRows('Monday');const gc=['#d6eaf8','#d5f5e3','#fdebd0'];
+  let h=`<div style="font-size:.75rem;color:var(--pr);font-weight:700;margin-bottom:5px;">📅 Normal Day:</div>
+  <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;">
+  <span class="badge" style="background:#fff3cd;color:#856404;">🙏 Assembly: ${aS}–${aE}</span>`;
+  rows.forEach(r=>{
+    if(r.type==='p'){const g=Math.floor((r.pt.p-1)/3);h+=`<span class="badge" style="background:${gc[g]};color:#333;">P${r.pt.p}: ${m2t12(t2m(r.pt.s))}–${m2t12(t2m(r.pt.e))}</span>`;}
+    else if(r.type==='sb')h+=`<span class="badge bo2">☕ ${r.dur}m</span>`;
+    else if(r.type==='lb')h+=`<span class="badge bo2" style="background:#fff3e0;">🍱 ${r.dur}m</span>`;
+    else if(r.type==='ab')h+=`<span class="badge" style="background:#e8f5e9;color:#2e7d32;">📖 Abhyasika ${r.dur}m</span>`;
+    else if(r.type==='abr')h+=`<span class="badge" style="background:#f3e5f5;color:#7b1fa2;">☕ ${r.dur}m</span>`;
+  });
+  const sr=buildRows('Wednesday');
+  h+=`</div><div style="font-size:.75rem;color:#7f3d00;font-weight:700;margin-bottom:5px;">🗓️ Wed/Sat (${c.shortDayPeriods} periods):</div>
+  <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;">
+  <span class="badge" style="background:#fff3cd;color:#856404;">🙏 Assembly</span>`;
+  sr.forEach(r=>{
+    if(r.type==='p')h+=`<span class="badge" style="background:#fdebd0;color:#7f3d00;">P${r.pt.p}: ${m2t12(t2m(r.pt.s))}–${m2t12(t2m(r.pt.e))}</span>`;
+    else if(r.type==='sb')h+=`<span class="badge bo2">☕ ${r.dur}m</span>`;
+    else if(r.type==='lb')h+=`<span class="badge bo2" style="background:#fff3e0;">🍱 ${r.dur}m</span>`;
+  });
+  h+=`</div><div style="font-size:.7rem;color:var(--mu);">Theory: P1–P${c.subjectPeriodLimit} | Practical prefer: P${+c.subjectPeriodLimit+1}+ (allowed P1–6 if needed) | Max warning: ${c.maxTeacherPeriods} periods</div>`;
+  document.getElementById('prevA').innerHTML=h;
+}
+
+// ===== SUBJECTS =====
+function addSubject(){
+  const name=document.getElementById('sname').value.trim(),code=document.getElementById('scode').value.trim().toUpperCase();
+  const color=document.getElementById('scolor').value,type=document.getElementById('stype').value;
+  const priority=document.getElementById('spriority').value;
+  if(!name||!code)return toast('Name & code required!','error');
+  if(D.subjects.find(s=>s.code===code))return toast('Code exists!','error');
+  D.subjects.push({id:Date.now(),name,code,color,type,priority:priority||'normal'});save();
+  document.getElementById('sname').value='';document.getElementById('scode').value='';
+  renderSubjects();popSubjSel();toast(`${name} added`);
+}
+function renderSubjects(){
+  const list=document.getElementById('subj-list'),empty=document.getElementById('empty-s');
+  if(!D.subjects.length){list.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  list.innerHTML=D.subjects.map(s=>`<div style="display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;background:${s.color}18;border:1.5px solid ${s.color};">
+    <div style="width:8px;height:8px;border-radius:50%;background:${s.color};flex-shrink:0;"></div>
+    <span style="font-weight:700;color:${s.color};font-size:.74rem;">${s.code}</span>
+    <span style="font-size:.8rem;">${s.name}</span>
+    <span class="badge ${s.type==='theory'?'bb':s.type==='practical'?'bo2':'bgy'}" style="font-size:.58rem;">${s.type}</span>
+    ${s.priority==='high'?'<span class="badge" style="background:#fff3cd;color:#856404;font-size:.58rem;">⭐high</span>':''}
+    <button class="btn bd2 bs" onclick="delSubj(${s.id})">✕</button>
+  </div>`).join('');
+}
+function delSubj(id){if(!confirm('Delete?'))return;D.subjects=D.subjects.filter(s=>s.id!==id);save();renderSubjects();popSubjSel();}
+
+// ===== TEACHERS =====
+function getTLoad(tid){
+  let c=0;D.classes.forEach(cls=>(D.cfg.workingDays||[]).forEach(day=>{for(let p=1;p<=maxP(day);p++){const cell=D.TT[cls.id]?.[day]?.[p];if(cell?.teacherId===tid)c++;}}));
+  return c;
+}
+function addTeacher(){
+  const name=document.getElementById('tname').value.trim(),code=document.getElementById('tcode').value.trim().toUpperCase();
+  if(!name||!code)return toast('Name & code required!','error');
+  if(D.teachers.find(t=>t.code===code))return toast('Code exists!','error');
+  const subjs=Array.from(document.querySelectorAll('.tsCB:checked')).map(o=>+o.value);
+  D.teachers.push({id:Date.now(),name,code,phone:document.getElementById('tphone').value.trim(),subjects:subjs});
+  save();document.getElementById('tname').value='';document.getElementById('tcode').value='';document.getElementById('tphone').value='';
+  document.querySelectorAll('.tsCB').forEach(cb=>cb.checked=false);
+  renderTeachers();popCTSel();toast(`${name} added`);
+}
+function renderTeachers(){
+  const q=(document.getElementById('tsearch')?.value||'').toLowerCase();
+  const tb=document.getElementById('tbody-t'),em=document.getElementById('empty-t');
+  const fl=D.teachers.filter(t=>t.name.toLowerCase().includes(q)||t.code.toLowerCase().includes(q));
+  document.getElementById('tcount').textContent=D.teachers.length;
+  if(!fl.length){tb.innerHTML='';em.style.display='block';return;}
+  em.style.display='none';const mx=+(D.cfg.maxTeacherPeriods||36);
+  tb.innerHTML=fl.map((t,i)=>{
+    const sn=(t.subjects||[]).map(sid=>{const s=D.subjects.find(x=>x.id===sid);return s?`<span class="badge" style="background:${s.color}18;color:${s.color};cursor:pointer;" title="Click to remove" onclick="removeTS(${t.id},${s.id})">${s.code} ✕</span>`:''}).join(' ');
+    const ld=getTLoad(t.id);const pct=Math.min(100,Math.round(ld/mx*100));const col=ld>mx?'#e74c3c':ld>mx*.8?'#f39c12':'#27ae60';
+    // Build add-subject dropdown for subjects not yet assigned
+    const unassigned=D.subjects.filter(s=>!(t.subjects||[]).includes(s.id));
+    const addOpts=unassigned.length
+      ?'<option value="">+ विषय add करा</option>'+unassigned.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')
+      :'<option value="">— सर्व विषय assigned —</option>';
+    return`<tr>
+      <td>${i+1}</td>
+      <td><strong>${t.name}</strong><br><span style="font-size:.65rem;color:var(--mu);">${t.phone||''}</span></td>
+      <td><span class="badge bgg">${t.code}</span></td>
+      <td>
+        <div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center;">
+          ${sn||'<span style="color:#bbb;font-size:.72rem;">—</span>'}
+          <select onchange="addTS(${t.id},this)" style="padding:2px 5px;border:1.5px solid var(--ac);border-radius:5px;font-size:.7rem;color:var(--ac);font-weight:600;background:#fff8f0;cursor:pointer;margin-left:2px;">${addOpts}</select>
+        </div>
+      </td>
+      <td><span style="font-size:.73rem;font-weight:700;color:${col};">${ld}/${mx}</span>
+      <div class="ld-bar" style="width:75px;"><div class="ld-fill" style="width:${pct}%;background:${col};"></div></div>
+      ${ld>mx?'<span class="badge br">⚠️ Over</span>':''}</td>
+      <td><button class="btn bd2 bs" onclick="delT(${t.id})">Del</button></td>
+    </tr>`;
+  }).join('');
+}
+function addTS(tid,sel){
+  const sid=+sel.value;if(!sid)return;
+  const t=D.teachers.find(x=>x.id===tid);if(!t)return;
+  if(!(t.subjects||[]).includes(sid)){if(!t.subjects)t.subjects=[];t.subjects.push(sid);}
+  save();renderTeachers();
+  const s=D.subjects.find(x=>x.id===sid);
+  toast(`${t.name} ला ${s?.name} added!`);
+}
+function removeTS(tid,sid){
+  const t=D.teachers.find(x=>x.id===tid);if(!t)return;
+  t.subjects=(t.subjects||[]).filter(x=>x!==sid);
+  save();renderTeachers();
+  const s=D.subjects.find(x=>x.id===sid);
+  toast(`${t.name} कडून ${s?.name} काढला`,'warn');
+}
+function delT(id){if(!confirm('Delete?'))return;D.teachers=D.teachers.filter(t=>t.id!==id);save();renderTeachers();popCTSel();}
+function checkLoads(){
+  const mx=+(D.cfg.maxTeacherPeriods||36);const over=D.teachers.filter(t=>getTLoad(t.id)>mx);
+  const el=document.getElementById('tlw');if(!el)return;
+  el.innerHTML=over.length?`<div class="warn-b">⚠️ ${over.map(t=>`<strong>${t.name}</strong>(${getTLoad(t.id)})`).join(', ')} — ${mx} periods/week पेक्षा जास्त! (No restriction, only warning)</div>`:'';
+}
+
+// ===== CLASSES =====
+function addClass(){
+  const std=document.getElementById('cstd').value,div=document.getElementById('cdiv').value.trim().toUpperCase();
+  if(!div)return toast('Division required!','error');
+  const id=`${std}-${div}`;if(D.classes.find(c=>c.id===id))return toast('Already exists!','error');
+  D.classes.push({id,std,division:div,medium:document.getElementById('cmed').value,classTeacherId:+document.getElementById('cct').value||null});
+  save();renderClasses();toast(`${id} added`);
+}
+function addStdDivs(){
+  const std=document.getElementById('cstd').value;let added=0;
+  [['A','Marathi'],['B','Marathi'],['C','Semi-English'],['D','Semi-English'],['E','Semi-English'],['F','Semi-English']].forEach(([div,med])=>{
+    const id=`${std}-${div}`;
+    if(!D.classes.find(c=>c.id===id)){D.classes.push({id,std,division:div,medium:med,classTeacherId:null});added++;}
+  });
+  save();renderClasses();toast(`${added} divisions added for ${std}`);
+}
+function updateCT(cid,tid){
+  const cls=D.classes.find(c=>c.id===cid);if(!cls)return;
+  cls.classTeacherId=+tid||null;save();
+  const t=D.teachers.find(x=>x.id===+tid);
+  toast(`${cid} वर्गशिक्षक: ${t?t.name:'(काढला)'}`);}
+function renderClasses(){
+  const tb=document.getElementById('tbody-c'),em=document.getElementById('empty-c');
+  document.getElementById('ccount').textContent=D.classes.length;
+  if(!D.classes.length){tb.innerHTML='';em.style.display='block';return;}
+  em.style.display='none';
+  tb.innerHTML=D.classes.map((cls,i)=>{
+    const ctOpts='<option value="">-- वर्गशिक्षक निवडा --</option>'+
+      D.teachers.map(t=>`<option value="${t.id}"${t.id===cls.classTeacherId?' selected':''}>${t.name}</option>`).join('');
+    const cid=cls.id;
+    return `<tr>
+      <td>${i+1}</td>
+      <td><strong>${cls.std}</strong></td>
+      <td><span class="badge bb">${cls.division}</span></td>
+      <td><span class="badge ${cls.medium==='Marathi'?'bgg':'bpu'}">${cls.medium}</span></td>
+      <td><select data-cid="${cid}" onchange="updateCT(this.dataset.cid,this.value)" style="padding:4px 7px;border:1.5px solid var(--bd);border-radius:6px;font-size:.8rem;min-width:170px;background:var(--lt);">${ctOpts}</select></td>
+      <td><button class="btn bd2 bs" data-cid="${cid}" onclick="delC(this.dataset.cid)">Del</button></td>
+    </tr>`;
+  }).join('');
+}
+function delC(id){if(!confirm('Delete?'))return;D.classes=D.classes.filter(c=>c.id!==id);delete D.TT[id];delete D.CS[id];save();renderClasses();}
+
+// ===== ASSIGN =====
+function renderAssign(){
+  const cid=document.getElementById('asel').value;
+  if(!cid){document.getElementById('aarea').innerHTML='<div class="es"><p>📋 Select a class.</p></div>';return;}
+  const cls=D.classes.find(c=>c.id===cid);const ct=D.teachers.find(t=>t.id===cls.classTeacherId);
+  const rows=D.CS[cid]||[];
+  let h=`<div class="ib" style="margin-bottom:9px;"><strong>${cls.std}-${cls.division} (${cls.medium})</strong>${ct?` | वर्गशिक्षक: <strong>${ct.name}</strong>`:' | ⚠️ No class teacher'}</div>`;
+  h+=`<div class="ttw"><table class="dt" style="min-width:470px;"><thead><tr><th>#</th><th>Subject</th><th>Type</th><th>Priority</th><th>Teacher</th><th>P/Week</th><th></th></tr></thead><tbody id="arows">`;
+  rows.forEach((row,idx)=>{
+    const subj=D.subjects.find(s=>s.id===row.subjectId);
+    // Only show teachers who teach this subject
+    const subjTeachers=D.teachers.filter(t=>(t.subjects||[]).includes(row.subjectId));
+    const tList=subjTeachers.length?subjTeachers:D.teachers; // fallback: all teachers
+    const tOpts=tList.map(t=>`<option value="${t.id}" ${t.id===row.teacherId?'selected':''}>${t.name}</option>`).join('');
+    h+=`<tr><td>${idx+1}</td>
+    <td><span class="badge" style="background:${subj?.color||'#eee'}18;color:${subj?.color||'#333'};">${subj?.code||'?'}</span> ${subj?.name||'?'}</td>
+    <td><span class="badge ${subj?.type==='theory'?'bb':subj?.type==='practical'?'bo2':'bgy'}" style="font-size:.58rem;">${subj?.type||'?'}</span></td>
+    <td><span class="badge ${subj?.priority==='high'?'':'bgy'}" style="${subj?.priority==='high'?'background:#fff3cd;color:#856404;':''}font-size:.58rem;">${subj?.priority||'normal'}</span></td>
+    <td><select data-r="${idx}" class="ar-t" style="padding:3px 5px;font-size:.75rem;border:1px solid var(--bd);border-radius:5px;min-width:140px;"><option value="">-- Select --</option>${tOpts}</select></td>
+    <td><input type="number" data-r="${idx}" class="ar-p" value="${row.periodsPerWeek||3}" min="1" max="20" style="width:48px;padding:3px;font-size:.75rem;border:1px solid var(--bd);border-radius:5px;text-align:center;"></td>
+    <td><button class="btn bd2 bs" onclick="rmAR(${idx},'${cid}')">✕</button></td></tr>`;
+  });
+  h+=`</tbody></table></div>`;
+  const sOpts=D.subjects.map(s=>`<option value="${s.id}">${s.name} [${s.type}/${s.priority||'normal'}]</option>`).join('');
+  h+=`<div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end;padding:10px;background:var(--lt);border-radius:7px;">
+    <div><label class="fl">Subject</label><select id="nas" class="fi" style="min-width:155px;" onchange="filterNAT()"><option value="">-- Select --</option>${sOpts}</select></div>
+    <div><label class="fl">Teacher</label><select id="nat" class="fi" style="min-width:155px;"><option value="">-- Select --</option></select></div>
+    <div><label class="fl">P/Week</label><input type="number" id="nap" value="3" min="1" max="20" style="width:52px;padding:5px;border:1.5px solid var(--bd);border-radius:5px;text-align:center;"></div>
+    <button class="btn bk" onclick="addAR('${cid}')">➕ Add</button>
+  </div>`;
+  document.getElementById('aarea').innerHTML=h;
+}
+function filterNAT(){
+  const sid=+document.getElementById('nas').value;
+  const sel=document.getElementById('nat');
+  if(!sel)return;
+  let teachers=[];
+  if(sid){
+    teachers=D.teachers.filter(t=>(t.subjects||[]).includes(sid));
+    if(!teachers.length)teachers=D.teachers; // fallback
+  } else teachers=D.teachers;
+  sel.innerHTML='<option value="">-- Select --</option>'+teachers.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+}
+function addAR(cid){
+  const sid=+document.getElementById('nas').value,tid=+document.getElementById('nat').value||null,ppw=+document.getElementById('nap').value||3;
+  if(!sid)return toast('Select subject!','error');
+  if(!D.CS[cid])D.CS[cid]=[];
+  if(D.CS[cid].find(r=>r.subjectId===sid))return toast('Already assigned!','warn');
+  D.CS[cid].push({subjectId:sid,teacherId:tid,periodsPerWeek:ppw});save();renderAssign();document.getElementById('asel').value=cid;
+}
+function rmAR(idx,cid){if(!D.CS[cid])return;D.CS[cid].splice(idx,1);save();renderAssign();document.getElementById('asel').value=cid;}
+function saveAssign(){
+  const cid=document.getElementById('asel').value;if(!cid)return;
+  if(!D.CS[cid])D.CS[cid]=[];
+  document.querySelectorAll('.ar-t').forEach(sel=>{const idx=+sel.dataset.r;if(D.CS[cid][idx])D.CS[cid][idx].teacherId=+sel.value||null;});
+  document.querySelectorAll('.ar-p').forEach(inp=>{const idx=+inp.dataset.r;if(D.CS[cid][idx])D.CS[cid][idx].periodsPerWeek=+inp.value||3;});
+  save();const el=document.getElementById('asv');el.style.display='inline';setTimeout(()=>el.style.display='none',2000);toast('Saved!');
+}
+function copyFrom(){
+  const cid=document.getElementById('asel').value;if(!cid)return toast('Select target class!','warn');
+  const sel=document.getElementById('cpFrom');
+  sel.innerHTML='<option value="">-- Source --</option>'+D.classes.filter(c=>c.id!==cid).map(c=>`<option value="${c.id}">${c.std}-${c.division}</option>`).join('');
+  document.getElementById('modCp').classList.add('show');
+}
+function doCopy(){
+  const from=document.getElementById('cpFrom').value,to=document.getElementById('asel').value;
+  if(!from||!to)return;D.CS[to]=JSON.parse(JSON.stringify(D.CS[from]||[]));
+  save();document.getElementById('modCp').classList.remove('show');renderAssign();document.getElementById('asel').value=to;toast('Copied!');
+}
+// ===== SHARED TIMETABLE GRID (rows=time, cols=days) =====
+// Used by EDITOR and VIEW (same layout as print)
+function buildTTGrid(cid, editable){
+  const c=D.cfg;const days=c.workingDays||[];const rows=fullRows();const tt=D.TT[cid]||{};
+  const cls=D.classes.find(x=>x.id===cid);const ct=D.teachers.find(t=>t.id===cls?.classTeacherId);
+  const csl=D.CS[cid]||[];
+  const spT=csl.map(r=>{const s=D.subjects.find(x=>x.id===r.subjectId);const t=D.teachers.find(x=>x.id===r.teacherId);return s&&t?`<span style="display:inline-block;font-size:.62rem;line-height:1.4;margin-right:3px;"><strong style="color:${s.color};">${s.code}:</strong>${t.name}</span>`:''}).filter(Boolean).join('');
+  const aS=m2t12(t2m(c.assemblyTime||'07:15'));const aE=m2t12(t2m(c.assemblyTime||'07:15')+(+(c.assemblyDuration||15)));
+  let h=`<div style="margin-bottom:6px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:5px;">
+    <div>
+      <div style="font-size:.88rem;font-weight:700;color:var(--pr);">${cls?.std}-${cls?.division} (${cls?.medium})</div>
+      ${ct?`<div style="font-size:.71rem;color:var(--mu);">वर्गशिक्षक: <strong>${ct.name}</strong></div>`:''}
+    </div>
+    <div style="font-size:.65rem;color:#555;text-align:right;max-width:280px;">${spT}</div>
+  </div>
+  <div class="ttw"><table class="ptt">
+  <thead><tr>
+    <th>वेळ / Time</th>`;
+  days.forEach(day=>{const iS=isShort(day);
+    h+=`<th class="${iS?'sh-day':''}">${day}<br><span style="font-size:.58rem;opacity:.8;">${iS?'6T':'9T'}</span></th>`;});
+  h+=`<th>विषय शिक्षक</th></tr></thead><tbody>`;
+  // Assembly
+  h+=`<tr><td class="time-col">🙏<br>${aS}<br>${aE}</td>`;
+  const asmRows=rows.filter(r=>r.type==='p').length + rows.filter(r=>r.type!=='p').length + 1;
+  days.forEach(()=>h+=`<td class="assembly">Assembly<br>प्रार्थना</td>`);
+  h+=`<td class="tchr-col" rowspan="${asmRows}">${spT||'—'}</td></tr>`;
+  rows.forEach(row=>{
+    if(row.type==='p'){
+      const p=row.pt.p;const tStr=`${m2t12(t2m(row.pt.s))} –<br>${m2t12(t2m(row.pt.e))}`;
+      h+=`<tr><td class="time-col">${tStr}<br><span style="color:#888;font-size:.58rem;">P${p}</span></td>`;
+      days.forEach(day=>{
+        const mp=maxP(day);if(p>mp){h+=`<td class="off">—</td>`;return;}
+        const cell=tt[day]?.[p];
+        if(cell?.isDoubleCont){
+          const subj=D.subjects.find(s=>s.id===cell.subjectId);const tchr=D.teachers.find(t=>t.id===cell.teacherId);
+          h+=editable?`<td class="ptt dbl-r" onclick="openMod('${cid}','${day}',${p})" style="border-top:2px solid ${subj?.color||'#3498db'}">
+            <span class="cell-subj" style="color:${subj?.color||'#1a3a5c'};opacity:.75;">${subj?.code||'?'}</span>
+            <span class="cell-info">↩ ${tchr?.code||'?'}</span></td>`:`<td class="dbl-r" style="border-top:2px solid ${subj?.color||'#3498db'}">
+            <span class="cell-subj" style="color:${subj?.color||'#1a3a5c'};opacity:.75;">${subj?.code||'?'}</span>
+            <span class="cell-info">↩ ${tchr?.code||'?'}</span></td>`;return;}
+        if(cell?.subjectId){
+          const subj=D.subjects.find(s=>s.id===cell.subjectId);const tchr=D.teachers.find(t=>t.id===cell.teacherId);
+          const cn=editable?`onclick="openMod('${cid}','${day}',${p})"`:' ';
+          h+=`<td class="filled${cell.isDouble?' dbl-l':''}" ${cn} style="border-top:2px solid ${subj?.color||'#3498db'}">
+            <span class="cell-subj" style="color:${subj?.color||'#1a3a5c'}">${subj?.code||'?'}${cell.isDouble?'×2':''}</span>
+            <span class="cell-info">${tchr?.code||'?'}</span></td>`;
+        } else {
+          const isTh=p<=+(c.subjectPeriodLimit||6);
+          h+=editable?`<td class="empty" onclick="openMod('${cid}','${day}',${p})">${isTh?'+':'🎨'}</td>`:`<td class="empty">—</td>`;
+        }
+      });
+      h+='</tr>';
+    } else {
+      let cl='brk',em='☕',lbl='';
+      if(row.type==='lb'){cl='lnch';em='🍱';lbl=`Lunch ${row.dur}m`;}
+      else if(row.type==='ab'){cl='abhy';em='📖';lbl=`Abhyasika ${row.dur}m`;}
+      else if(row.type==='abr'){cl='abhr';em='☕';lbl=`Break ${row.dur}m`;}
+      else lbl=`Break ${row.dur}m`;
+      const tStr=row.s?`${m2t12(t2m(row.s))} –<br>${m2t12(t2m(row.e))}`:'';
+      h+=`<tr><td class="time-col">${tStr}</td>`;
+      days.forEach(day=>{
+        if((row.type==='ab'||row.type==='abr')&&isShort(day))h+=`<td class="off">—</td>`;
+        else h+=`<td class="${cl}">${em}<br><span style="font-size:.6rem;">${lbl}</span></td>`;
+      });
+      h+='</tr>';
+    }
+  });
+  h+='</tbody></table></div>';
+  return h;
+}
+
+// ===== EDITOR =====
+function loadEditor(){
+  const cid=document.getElementById('ttsel').value;
+  if(!cid){document.getElementById('ttarea').innerHTML='<div class="es"><p>📅 Select a class.</p></div>';return;}
+  document.getElementById('ttarea').innerHTML=buildTTGrid(cid,true);
+  chkCF(cid);checkLoads();
+}
+function chkCF(cid){
+  const c=D.cfg;const cfls=[];
+  (c.workingDays||[]).forEach(day=>{for(let p=1;p<=maxP(day);p++){
+    const cell=D.TT[cid]?.[day]?.[p];if(!cell?.teacherId)continue;
+    D.classes.forEach(cls=>{if(cls.id===cid)return;const o=D.TT[cls.id]?.[day]?.[p];
+      if(o?.teacherId===cell.teacherId){const t=D.teachers.find(x=>x.id===cell.teacherId);cfls.push(`⚠️ <strong>${t?.name}</strong> — ${day} P${p}`);}});
+  }});
+  document.getElementById('cflts').innerHTML=[...new Set(cfls)].map(x=>`<div class="wb">${x} — एकाच वेळी दोन वर्गांत!</div>`).join('');
+}
+function saveTT(){save();toast('Timetable saved!');}
+function clearTT(){const cid=document.getElementById('ttsel').value;if(!cid||!confirm('Clear?'))return;D.TT[cid]={};save();loadEditor();toast('Cleared','warn');}
+
+// ===== MODAL =====
+function openMod(cid,day,p){
+  CM={cid,day,p};const cls=D.classes.find(c=>c.id===cid);const c=D.cfg;
+  const isTh=p<=+(c.subjectPeriodLimit||6);const isSd=isShort(day);
+  const pt=getPTimes().find(x=>x.p===p);const ctobj=D.teachers.find(t=>t.id===cls.classTeacherId);
+  document.getElementById('minfo').innerHTML=`<strong>${cls.std}-${cls.division}</strong> | ${day}${isSd?' (Short Day)':''} | P${p} ${pt?`(${m2t12(t2m(pt.s))}–${m2t12(t2m(pt.e))})`:''} | ${isTh?'📖 Theory zone':'🎨 Activity zone'}`;
+  const cth=document.getElementById('mcth');
+  if(p===1&&ctobj){cth.style.display='block';cth.innerHTML=`👨‍🏫 P1 suggestion: <strong>${ctobj.name}</strong> (वर्गशिक्षक)`;}else cth.style.display='none';
+  const re=document.getElementById('mrest');
+  if(!isTh){re.style.display='block';re.className='ib';re.innerHTML='🎨 Activity zone — Practical subjects prefer. Theory allowed if needed.';}else re.style.display='none';
+  const csl=D.CS[cid]||[];
+  // Build subject options: prefer-match first, others allowed
+  let preferred=[],others=[];
+  csl.forEach(row=>{const subj=D.subjects.find(x=>x.id===row.subjectId);if(!subj)return;
+    if(!isTh&&subj.type==='theory')others.push({subj,row});
+    else if(isTh&&subj.type==='practical')others.push({subj,row});
+    else preferred.push({subj,row});});
+  const msubj=document.getElementById('msubj');
+  let opts='<option value="">-- Select --</option>';
+  if(preferred.length)opts+=`<optgroup label="✅ Preferred">${preferred.map(({subj})=>`<option value="${subj.id}">${subj.name}</option>`).join('')}</optgroup>`;
+  if(others.length)opts+=`<optgroup label="⚠️ Allowed (not preferred)">${others.map(({subj})=>`<option value="${subj.id}">${subj.name}</option>`).join('')}</optgroup>`;
+  if(!csl.length)opts+='<option value="">No subjects assigned — go to Subjects tab</option>';
+  msubj.innerHTML=opts;
+  const cell=D.TT[cid]?.[day]?.[p];
+  if(cell){msubj.value=cell.subjectId||'';onSC(cell.teacherId);document.getElementById('mdbl').checked=!!cell.isDouble;}
+  else{if(p===1&&ctobj){msubj.value='';onSC(ctobj.id);}else onSC(null);document.getElementById('mdbl').checked=false;}
+  // Show subject period count in modal
+  const mpc=document.getElementById('mperiodcount');
+  if(mpc){msubj.addEventListener('change',function(){
+    const s2=+this.value;const csR=(D.CS[CM.cid]||[]).find(r=>r.subjectId===s2);
+    if(csR){const done=getSubjAssigned(CM.cid,s2);const t2=csR.periodsPerWeek||0;
+      mpc.innerHTML=`<span style="color:${done>=t2?'#e74c3c':'#27ae60'}">📊 ${done}/${t2} assigned</span>`;mpc.style.display='block';}
+    else mpc.style.display='none';
+  },{once:false});}
+  chkMC();updDbl();
+  document.getElementById('modP').classList.add('show');
+}
+function onSC(presel){
+  const sid=+document.getElementById('msubj').value;const cid=CM.cid;const sel=document.getElementById('mteach');
+  let teachers=[];
+  // First: teacher assigned to this subject for this class
+  if(sid&&cid){const row=(D.CS[cid]||[]).find(r=>r.subjectId===sid);if(row?.teacherId){const t=D.teachers.find(x=>x.id===row.teacherId);if(t)teachers=[t];}}
+  // Second: teachers who have this subject in their list
+  if(!teachers.length&&sid)teachers=D.teachers.filter(t=>(t.subjects||[]).includes(sid));
+  // Fallback: all teachers
+  if(!teachers.length)teachers=D.teachers;
+  sel.innerHTML='<option value="">-- Select --</option>'+teachers.map(t=>`<option value="${t.id}">${t.name} (${t.code})</option>`).join('');
+  if(presel)sel.value=presel;chkMC();
+}
+function chkMC(){
+  const tid=+document.getElementById('mteach').value;const{cid,day,p}=CM;
+  const cf=document.getElementById('mcfl'),ld=document.getElementById('mload');
+  if(!tid){cf.style.display='none';ld.style.display='none';return;}
+  let cfl=null;
+  D.classes.forEach(cls=>{if(cls.id===cid)return;const cell=D.TT[cls.id]?.[day]?.[p];
+    if(cell?.teacherId===tid){const t=D.teachers.find(x=>x.id===tid);const c=D.classes.find(x=>x.id===cls.id);cfl=`⛔ ${t?.name} — ${c?.std}-${c?.division} मध्ये ${day} P${p} ला!`;}});
+  if(cfl){cf.style.display='block';cf.className='wb';cf.innerHTML=cfl;}else cf.style.display='none';
+  const mx=+(D.cfg.maxTeacherPeriods||36);const l=getTLoad(tid);
+  if(l>mx){ld.style.display='block';ld.className='warn-b';ld.innerHTML=`⚠️ ${D.teachers.find(x=>x.id===tid)?.name} — ${l}/${mx} periods (warning only)`;}
+  else if(l>mx*.9){ld.style.display='block';ld.className='wb';ld.innerHTML=`⚠️ ${l}/${mx} — जवळ limit!`;}
+  else ld.style.display='none';
+}
+function updDbl(){
+  const isDbl=document.getElementById('mdbl').checked;const msg=document.getElementById('dblmsg');
+  if(!isDbl){msg.style.display='none';return;}
+  const{p}=CM;const c=D.cfg;const next=p+1;msg.style.display='block';
+  if(next>+(c.numPeriods||9)){msg.className='wb';msg.innerHTML='⛔ Next period नाही!';return;}
+  if(!sameGrp(p,next)){msg.className='wb';msg.innerHTML=`⛔ P${p}(Grp ${getGrp(p)}) + P${next}(Grp ${getGrp(next)}) — वेगळ्या group!`;return;}
+  if(p===+(c.shortBreakAfter||3)||p===+(c.lunchBreakAfter||6)){msg.className='wb';msg.innerHTML=`⛔ P${p} नंतर break — double शक्य नाही!`;return;}
+  msg.className='ob';msg.innerHTML=`✅ P${p}+P${next} Double (Group ${getGrp(p)})`;
+}
+function getSubjAssigned(cid,sid){
+  // Count how many times subject is assigned in timetable for this class
+  let cnt=0;(D.cfg.workingDays||[]).forEach(day=>{for(let p=1;p<=maxP(day);p++){const cell=D.TT[cid]?.[day]?.[p];if(cell?.subjectId===sid)cnt++;}});
+  return cnt;
+}
+function assignP(){
+  const sid=+document.getElementById('msubj').value,tid=+document.getElementById('mteach').value;
+  if(!sid||!tid)return toast('Subject & Teacher निवडा!','error');
+  const{cid,day,p}=CM;const c=D.cfg;
+  // Block only if teacher conflict
+  let cfl=false;D.classes.forEach(cls=>{if(cls.id===cid)return;const cell=D.TT[cls.id]?.[day]?.[p];if(cell?.teacherId===tid)cfl=true;});
+  if(cfl)return toast('⛔ Teacher conflict!','error',5000);
+  const isDbl=document.getElementById('mdbl').checked;
+  // Check subject period limit BEFORE assigning
+  const csRow=(D.CS[cid]||[]).find(r=>r.subjectId===sid);
+  const tgt=csRow?.periodsPerWeek||0;
+  if(tgt>0){
+    const cur=getSubjAssigned(cid,sid);
+    const adding=isDbl?2:1;
+    if(cur+adding>tgt){
+      const subj=D.subjects.find(x=>x.id===sid);
+      return toast(`⛔ ${subj?.name||'हा विषय'} — ${cur}/${tgt} तास पूर्ण! आठवड्याचे तास संपले.`,'error',5000);
+    }
+  }  if(!D.TT[cid])D.TT[cid]={};if(!D.TT[cid][day])D.TT[cid][day]={};
+  if(isDbl){const next=p+1;
+    if(!sameGrp(p,next)||next>+(c.numPeriods||9)||p===+(c.shortBreakAfter||3)||p===+(c.lunchBreakAfter||6))return toast('Double शक्य नाही!','error');
+    D.TT[cid][day][p]={subjectId:sid,teacherId:tid,isDouble:true};D.TT[cid][day][next]={subjectId:sid,teacherId:tid,isDoubleCont:true};
+  } else D.TT[cid][day][p]={subjectId:sid,teacherId:tid};
+  // Warn if teacher load exceeded (no block)
+  const mx=+(c.maxTeacherPeriods||36);const l=getTLoad(tid);
+  if(l>mx){const t=D.teachers.find(x=>x.id===tid);toast(`⚠️ ${t?.name} — ${l} periods (warning, not blocked)`,'warn',4000);}
+  save();closeMod();loadEditor();checkLoads();
+}
+function clearP(){
+  const{cid,day,p}=CM;const cell=D.TT[cid]?.[day]?.[p];
+  if(D.TT[cid]?.[day]){
+    if(cell?.isDouble&&D.TT[cid][day][p+1])delete D.TT[cid][day][p+1];
+    if(cell?.isDoubleCont&&D.TT[cid][day][p-1])delete D.TT[cid][day][p-1].isDouble;
+    delete D.TT[cid][day][p];
+  }
+  save();closeMod();loadEditor();checkLoads();
+}
+function closeMod(){document.getElementById('modP').classList.remove('show');}
+
+// ===== AUTO-FILL =====
+// Core generator: fills the timetable for ONE class (cid), taking into
+// account whatever is ALREADY placed in D.TT for ALL OTHER classes (so
+// teacher-conflict checks against other classes work correctly whether
+// called standalone or as part of a "generate all classes" run).
+// Returns {ok:boolean, leftover:[{name,have,need}]}
+function generateForClass(cid){
+  const csl=D.CS[cid];
+  if(!csl?.length)return{ok:false,leftover:[],reason:'no-subjects'};
+
+  const cfg=D.cfg;
+  const days=[...(cfg.workingDays||[])];
+  const cls2=D.classes.find(x=>x.id===cid);
+  
+  // Track SCNMR/WEIT teachers' special reserved days
+  const teacherSpecialDays={}; // teacherId -> {scmnrDay, weitDay}
+  csl.forEach(row=>{
+    const subj=D.subjects.find(x=>x.id===row.subjectId);
+    if(!subj)return;
+    const tid=row.teacherId;
+    if(!teacherSpecialDays[tid])teacherSpecialDays[tid]={};
+    if(isSCNMR(subj))teacherSpecialDays[tid].scmnrDay='Monday';
+    if(isWorkExperience(subj)){
+      const weDay=getWEDay(cls2);
+      if(weDay)teacherSpecialDays[tid].weitDay=weDay;
+    }
+  });
+  const ctId=cls2?.classTeacherId;
+  const limit=+(cfg.subjectPeriodLimit||6);
+  const sb=+(cfg.shortBreakAfter||3);
+  const lb=+(cfg.lunchBreakAfter||6);
+  const np=+(cfg.numPeriods||9);
+  const sdp=+(cfg.shortDayPeriods||6);
+  const lateStart=limit+1; // P7
+
+  // ── Subject classifiers ──────────────────────────────────────
+  function nm(subj){return((subj?.name||'')+(subj?.code||'')).toLowerCase();}
+
+  function isPE(subj){
+    const s=nm(subj);
+    return s.includes('pe')||s.includes('sha')||s.includes('शा')||
+           s.includes('physical')||s.includes('शारीर');
+  }
+  function isSciPrac(subj){
+    const s=nm(subj);
+    return (s.includes('pra')&&(s.includes('sc')||s.includes('sci')||s.includes('lab')))||
+           s.includes('sc1pra')||s.includes('sc2pra')||s.includes('scpra')||
+           (subj?.type==='practical'&&(s.includes('sc')||s.includes('sci')));
+  }
+  function sciGroup(subj){
+    // Returns '1' or '2' for Science I / Science II (whether theory or practical subject), else null.
+    // IMPORTANT: check "II"/"2" patterns FIRST, since "science ii" contains
+    // "science i" as a substring — checking group 1 first would misclassify
+    // Science II as Science I.
+    const s=nm(subj);
+    if(s.includes('sc2')||s.includes('science ii')||s.includes('science2'))return'2';
+    if(s.includes('sc1')||s.includes('science i')||s.includes('science1'))return'1';
+    return null;
+  }
+  function isSciTheory(subj){
+    return sciGroup(subj)&&!isSciPrac(subj);
+  }
+  function isComputer(subj){
+    const s=nm(subj);
+    return s.includes('comp')||s.includes('sang')||s.includes('संगण');
+  }
+  function isLateOnly(subj){
+    const s=nm(subj);
+    return s.includes('scout')||s.includes('ncc')||s.includes('mcc')||
+           s.includes('rsp')||s.includes('guide')||s.includes('स्काऊट')||
+           s.includes('jal')||s.includes('jar')||
+           (s.includes('we')&&subj?.type==='practical'&&!isPE(subj));
+  }
+  function isPS1(subj){
+    const s=nm(subj);
+    return (s.includes('ps1')||(s.includes('parisar')&&s.includes('1'))||
+            (s.includes('परिसर')&&(s.includes('१')||s.includes('1'))));
+  }
+  function isHindiOrSanskrut(subj){
+    const s=nm(subj);
+    return s.includes('hindi')||s.includes('sanskrut')||s.includes('संस्कृत')||s.includes('हिंदी');
+  }
+  function isGeneralScience(subj){
+    const s=nm(subj);
+    return s.includes('general')||s.includes('सामान्य');
+  }
+  function isWorkExperience(subj){
+    const s=nm(subj);
+    const code=(subj?.code||'').toUpperCase();
+    return (s.includes('work')&&s.includes('exp'))||s.includes('कार्य')||code==='WEIT';
+  }
+  function isSCNMR(subj){
+    // Scout, Guide, NCC, MCC, RSP - subject code detection
+    const code=(subj?.code||'').toUpperCase();
+    return code==='SCNMR'||code.includes('SCOUT')||code.includes('NCC')||
+           code.includes('MCC')||code.includes('RSP')||code.includes('GUIDE');
+  }
+  function isMath1(subj){
+    const code=(subj?.code||'').toUpperCase();
+    return code==='MATH1'||code==='M1'||(nm(subj).includes('math')&&nm(subj).includes('1'));
+  }
+  function isMath2(subj){
+    const code=(subj?.code||'').toUpperCase();
+    return code==='MATH2'||code==='M2'||(nm(subj).includes('math')&&nm(subj).includes('2'));
+  }
+  function isGeography(subj){
+    const s=nm(subj);
+    return s.includes('geog')||s.includes('भूगोल');
+  }
+  function isHistory(subj){
+    const s=nm(subj);
+    return (s.includes('hist')||s.includes('इतिहास'))&&!isGeography(subj);
+  }
+  function is6thClass(cls){
+    return cls?.std==='6'||cls?.std==='6th'||cls?.std==='षष्ठी';
+  }
+  function getClassStd(cls){
+    // Extract numeric standard: '5', '5th', 'पाचवी' → 5, '9th' → 9, '10th' → 10
+    const s=String(cls?.std||'').toLowerCase();
+    if(s.includes('5')||s.includes('पाच'))return 5;
+    if(s.includes('6')||s.includes('षष्ठ'))return 6;
+    if(s.includes('7')||s.includes('सप्त'))return 7;
+    if(s.includes('8')||s.includes('अष्ट'))return 8;
+    if(s.includes('9')||s.includes('नव'))return 9;  // 9TH CLASS
+    if(s.includes('10')||s.includes('दश'))return 10; // 10TH CLASS
+    return null;
+  }
+  function getWEDay(cls){
+    // WEIT schedule: CLASS-LEVEL fixed (all sections same day)
+    // 5→Mon, 6→Tue, 7→Thu, 8→Fri
+    const std=getClassStd(cls);
+    return {5:'Monday',6:'Tuesday',7:'Thursday',8:'Friday'}[std]||null;
+  }
+  function getPEDay(cls){
+    // PE schedule: CLASS-LEVEL fixed (all sections same day)
+    // 5→Thu, 6→Mon, 7→Fri, 8→Tue
+    const std=getClassStd(cls);
+    return {5:'Thursday',6:'Monday',7:'Friday',8:'Tuesday'}[std]||null;
+  }
+  // ⚠️ IMPORTANT: These days are CLASS-LEVEL, not section-level
+  // All sections of 5th class get Monday WEIT, not mixed days
+
+  // ── Helpers ──────────────────────────────────────────────────
+  function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}}
+  function maxPDay(day){return isShort(day)?sdp:np;}
+
+  function teacherFree(tid,day,p){
+    if(!tid)return true;
+    for(const cl of D.classes){
+      if(cl.id===cid)continue;
+      if(D.TT[cl.id]?.[day]?.[p]?.teacherId===tid)return false;
+    }
+    return true;
+  }
+
+  // School-wide: is any OTHER class doing a Computer-lab period at this day+period?
+  // (Computer has only 1 lab — strict single-occupancy across the whole school)
+  function computerLabFree(day,p){
+    for(const cl of D.classes){
+      if(cl.id===cid)continue;
+      const cell=D.TT[cl.id]?.[day]?.[p];
+      if(!cell)continue;
+      const s=D.subjects.find(x=>x.id===cell.subjectId);
+      if(isComputer(s))return false;
+    }
+    return true;
+  }
+
+  const weekUsed={};
+  const dayUsed={};
+  csl.forEach(r=>{weekUsed[r.subjectId]=0;});
+  days.forEach(day=>{dayUsed[day]={};});
+
+  function getUsed(sid){return weekUsed[sid]||0;}
+  function getDayUsed(day,sid){return dayUsed[day][sid]||0;}
+  function getTgt(sid){return+(csl.find(r=>r.subjectId===sid)?.periodsPerWeek||3);}
+  function slotFree(day,p){return!D.TT[cid][day][p];}
+
+  function dayMax(subjectId){
+    const subj=D.subjects.find(x=>x.id===subjectId);
+    if(isPE(subj))return 3; // PE allows 3/day (triple)
+    return 2; // everyone else: at most 2/day (only used when a double lands there)
+  }
+
+  function isComputerSlotOk(subjectId,day,p){
+    const subj=D.subjects.find(x=>x.id===subjectId);
+    if(isComputer(subj)&&!computerLabFree(day,p))return false;
+    return true;
+  }
+
+  function canPlace(item,day,p){
+    if(getUsed(item.subjectId)>=getTgt(item.subjectId))return false;
+    if(getDayUsed(day,item.subjectId)>=dayMax(item.subjectId))return false;
+    if(!slotFree(day,p))return false;
+    if(!teacherFree(item.teacherId,day,p))return false;
+    if(!isComputerSlotOk(item.subjectId,day,p))return false;
+    return true;
+  }
+
+  function doPlace(item,day,p){
+    D.TT[cid][day][p]={subjectId:item.subjectId,teacherId:item.teacherId};
+    weekUsed[item.subjectId]=(weekUsed[item.subjectId]||0)+1;
+    dayUsed[day][item.subjectId]=(dayUsed[day][item.subjectId]||0)+1;
+  }
+
+  function canConsec(item,day,p,len){
+    const mp=maxPDay(day);
+    if(p+len-1>mp)return false;
+    if(getUsed(item.subjectId)+len>getTgt(item.subjectId))return false;
+    if(getDayUsed(day,item.subjectId)+len>dayMax(item.subjectId))return false;
+    for(let i=0;i<len;i++){
+      if(!slotFree(day,p+i))return false;
+      if(!teacherFree(item.teacherId,day,p+i))return false;
+      if(!isComputerSlotOk(item.subjectId,day,p+i))return false;
+    }
+    for(let i=0;i<len-1;i++){
+      if(p+i===sb||p+i===lb)return false;
+      if(!sameGrp(p+i,p+i+1))return false;
+    }
+    return true;
+  }
+
+  function doConsec(item,day,p,len){
+    D.TT[cid][day][p]={subjectId:item.subjectId,teacherId:item.teacherId,isDouble:true};
+    for(let i=1;i<len;i++)
+      D.TT[cid][day][p+i]={subjectId:item.subjectId,teacherId:item.teacherId,isDoubleCont:true};
+    weekUsed[item.subjectId]=(weekUsed[item.subjectId]||0)+len;
+    dayUsed[day][item.subjectId]=(dayUsed[day][item.subjectId]||0)+len;
+  }
+
+  // Force place (used only for class-teacher P1 — ignores dayMax, since this
+  // is the very first placement of the day and nothing can conflict with it).
+  function forcePlace(item,day,p){
+    if(!slotFree(day,p))return false;
+    if(!teacherFree(item.teacherId,day,p))return false;
+    D.TT[cid][day][p]={subjectId:item.subjectId,teacherId:item.teacherId};
+    weekUsed[item.subjectId]=(weekUsed[item.subjectId]||0)+1;
+    dayUsed[day][item.subjectId]=(dayUsed[day][item.subjectId]||0)+1;
+    return true;
+  }
+
+  // Is slot (day,p) adjacent to an existing same-subject period on this day?
+  function isAdjacentToSame(sid,day,p){
+    const mp=maxPDay(day);
+    const prevCell=p>1?D.TT[cid][day][p-1]:null;
+    const nextCell=p<mp?D.TT[cid][day][p+1]:null;
+    if(prevCell?.subjectId===sid&&sameGrp(p-1,p)&&p-1!==sb&&p-1!==lb)return true;
+    if(nextCell?.subjectId===sid&&sameGrp(p,p+1)&&p!==sb&&p!==lb)return true;
+    return false;
+  }
+
+  function schoolSciPracOnDay(day){
+    let cnt=0;
+    D.classes.forEach(cl=>{
+      for(let p=1;p<=maxPDay(day);p++){
+        const cell=D.TT[cl.id]?.[day]?.[p];
+        if(!cell||cell.isDoubleCont)continue;
+        const s=D.subjects.find(x=>x.id===cell.subjectId);
+        if(isSciPrac(s))cnt++;
+      }
+    });
+    return cnt;
+  }
+
+  // Clear
+  D.TT[cid]={};
+  days.forEach(day=>{D.TT[cid][day]={};});
+
+  const sdays=[...days];
+
+  // ════════════════════════════════════════════════════════════
+  // PHASE 0.75 (MOVED FIRST): SCNMR — ULTRA-AGGRESSIVE Monday P7-P8-P9
+  //   7-8-9 ONLY: Place exactly 3 tास on Monday P7-P8-P9, STOP!
+  // ════════════════════════════════════════════════════════════
+  const stdSCNMR=getClassStd(cls2);
+  if(stdSCNMR>=7 && stdSCNMR<=9){
+    csl.forEach(row=>{
+      const subj=D.subjects.find(x=>x.id===row.subjectId);
+      if(!isSCNMR(subj))return;
+      
+      // Check if already placed (IMPORTANT!)
+      const alreadyUsed=Object.keys(D.TT[cid]||{}).reduce((s,d)=>{
+        return s+(Object.keys(D.TT[cid][d]||{}).filter(p=>D.TT[cid][d][p]?.subjectId===row.subjectId).length);
+      },0);
+      if(alreadyUsed>0)return; // Already placed, skip!
+      
+      const mondayDay='Monday';
+      if(!D.TT[cid][mondayDay])D.TT[cid][mondayDay]={};
+      
+      // FORCE place ONLY 3 at P7, P8, P9 on Monday
+      D.TT[cid][mondayDay][7]={subjectId:row.subjectId,teacherId:row.teacherId};
+      D.TT[cid][mondayDay][8]={subjectId:row.subjectId,teacherId:row.teacherId};
+      D.TT[cid][mondayDay][9]={subjectId:row.subjectId,teacherId:row.teacherId};
+    });
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // PHASE 0: Class Teacher → P1 every day (forced, highest priority)
+  // ════════════════════════════════════════════════════════════
+  let ctRow=null;
+  if(ctId){
+    ctRow=csl.find(r=>r.teacherId===ctId);
+    if(ctRow){
+      const item={subjectId:ctRow.subjectId,teacherId:ctId};
+      shuffle(sdays);
+      for(const day of sdays){
+        forcePlace(item,day,1);
+      }
+    }
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // PHASE 0b: If class teacher's OWN subject has 7 or 8 weekly periods,
+  //   reserve its double-day(s) at P1-P2 RIGHT NOW (before other phases
+  //   compete for P2 slots). This must run immediately after Phase 0.
+  // ════════════════════════════════════════════════════════════
+  if(ctRow){
+    const ctSubj=D.subjects.find(x=>x.id===ctRow.subjectId);
+    const ctTgt=getTgt(ctRow.subjectId);
+    if(ctSubj&&!isPE(ctSubj)&&!isSciPrac(ctSubj)&&!isComputer(ctSubj)&&!isLateOnly(ctSubj)&&!isPS1(ctSubj)&&!sciGroup(ctSubj)&&(ctTgt===7||ctTgt===8)){
+      const dblNeeded=ctTgt===8?2:1;
+      const item={subjectId:ctRow.subjectId,teacherId:ctRow.teacherId};
+      let dblDone=0;
+      shuffle(sdays);
+      for(const day of sdays){
+        if(dblDone>=dblNeeded)break;
+        const p1Cell=D.TT[cid][day][1];
+        if(!p1Cell||p1Cell.subjectId!==ctRow.subjectId)continue;
+        if(D.TT[cid][day][2])continue;
+        if(!teacherFree(item.teacherId,day,2))continue;
+        if(getUsed(item.subjectId)+1>ctTgt)continue;
+        D.TT[cid][day][1].isDouble=true;
+        D.TT[cid][day][2]={subjectId:ctRow.subjectId,teacherId:item.teacherId,isDoubleCont:true};
+        weekUsed[item.subjectId]=(weekUsed[item.subjectId]||0)+1;
+        dayUsed[day][item.subjectId]=(dayUsed[day][item.subjectId]||0)+1;
+        dblDone++;
+      }
+    }
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // PHASE 0.5: Reserve P2 for any subject needing 6 distinct days
+  //   (the LEAST flexible subjects — they need every single working
+  //   day, so they must claim a slot before anything else competes
+  //   for space). We place them right after the class-teacher's P1,
+  //   preferably at P2, one per day, BEFORE PE/Science/Computer etc.
+  //   eat into the available slots.
+  // ════════════════════════════════════════════════════════════
+  csl.forEach(row=>{
+    const subj=D.subjects.find(x=>x.id===row.subjectId);
+    if(!subj)return;
+    if(isPE(subj)||isComputer(subj)||isLateOnly(subj)||isPS1(subj)||sciGroup(subj))return;
+    if(ctRow&&ctRow.subjectId===row.subjectId)return; // already on P1
+    const tgt=getTgt(row.subjectId);
+    // LIMIT CHECK: Stop if already at target
+    const cur=Object.keys(D.TT[cid]||{}).reduce((s,d)=>s+(Object.keys(D.TT[cid][d]||{}).filter(p=>D.TT[cid][d][p]?.subjectId===row.subjectId).length),0);
+    if(cur>=tgt)return; // Already complete
+    if(tgt!==days.length)return; // only subjects needing ALL working days (e.g. 6 if 6 working days)
+    const item={subjectId:row.subjectId,teacherId:row.teacherId};
+    shuffle(sdays);
+    for(const day of sdays){
+      const mp=maxPDay(day);
+      for(let p=2;p<=mp;p++){
+        if(canPlace(item,day,p)){doPlace(item,day,p);break;}
+      }
+    }
+  });
+
+  // ════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════
+  // PHASE 1-2: PE + WEIT (BULLETPROOF REWRITE)
+  //   Classes 5-8: WEIT fixed day + PE fixed day (both P7-P8-P9)
+  //   Classes 9-10: PE distributed (new rules)
+  // ════════════════════════════════════════════════════════════
+  
+  const std=getClassStd(cls2);
+  
+  if(std>=5&&std<=8){
+    // CLASSES 5-8: Both WEIT and PE on fixed days
+    const weitDay=getWEDay(cls2);
+    const peDay=getPEDay(cls2);
+    
+    // Find PE and WEIT subjects
+    const peRow=csl.find(r=>isPE(D.subjects.find(x=>x.id===r.subjectId)));
+    const weitRow=csl.find(r=>isWorkExperience(D.subjects.find(x=>x.id===r.subjectId)));
+    
+    // WEIT placement (if exists and day is valid)
+    if(weitRow && weitDay){
+      if(!D.TT[cid][weitDay])D.TT[cid][weitDay]={};
+      D.TT[cid][weitDay][7]={subjectId:weitRow.subjectId,teacherId:weitRow.teacherId};
+      D.TT[cid][weitDay][8]={subjectId:weitRow.subjectId,teacherId:weitRow.teacherId};
+      D.TT[cid][weitDay][9]={subjectId:weitRow.subjectId,teacherId:weitRow.teacherId};
+    }
+    
+    // PE placement (if exists and day is valid)
+    if(peRow && peDay){
+      if(!D.TT[cid][peDay])D.TT[cid][peDay]={};
+      D.TT[cid][peDay][7]={subjectId:peRow.subjectId,teacherId:peRow.teacherId};
+      D.TT[cid][peDay][8]={subjectId:peRow.subjectId,teacherId:peRow.teacherId};
+      D.TT[cid][peDay][9]={subjectId:peRow.subjectId,teacherId:peRow.teacherId};
+    }
+  }
+  
+  else if(std===9){
+    // CLASS 9: PE distributed (2 divisions per day)
+    const peRow=csl.find(r=>isPE(D.subjects.find(x=>x.id===r.subjectId)));
+    if(peRow){
+      // Get division index (A=0, B=1, C=2, D=3, E=4, F=5)
+      const divStr=String(cls2?.division||'A').toUpperCase().trim();
+      const divChar=divStr.charAt(0);
+      const divIndex=divChar.charCodeAt(0)-65; // A→0, B→1, etc.
+      
+      // Map to day: A,B→Tue, C,D→Thu, E,F→Fri
+      let peDay='Tuesday';
+      if(divIndex===2||divIndex===3)peDay='Thursday';
+      if(divIndex===4||divIndex===5)peDay='Friday';
+      
+      if(!D.TT[cid][peDay])D.TT[cid][peDay]={};
+      D.TT[cid][peDay][7]={subjectId:peRow.subjectId,teacherId:peRow.teacherId};
+      D.TT[cid][peDay][8]={subjectId:peRow.subjectId,teacherId:peRow.teacherId};
+      D.TT[cid][peDay][9]={subjectId:peRow.subjectId,teacherId:peRow.teacherId};
+    }
+  }
+  
+  else if(std===10){
+    // CLASS 10: PE flexible (1 division per day)
+    const peRow=csl.find(r=>isPE(D.subjects.find(x=>x.id===r.subjectId)));
+    if(peRow){
+      // Get division index (A=0, B=1, C=2, D=3)
+      const divStr=String(cls2?.division||'A').toUpperCase().trim();
+      const divChar=divStr.charAt(0);
+      const divIndex=divChar.charCodeAt(0)-65; // A→0, B→1, etc.
+      
+      // Map to day: A→Mon, B→Tue, C→Thu, D→Fri
+      const dayMap=['Monday','Tuesday','Thursday','Friday'];
+      const peDay=dayMap[divIndex]||'Monday';
+      
+      if(!D.TT[cid][peDay])D.TT[cid][peDay]={};
+      D.TT[cid][peDay][7]={subjectId:peRow.subjectId,teacherId:peRow.teacherId};
+      D.TT[cid][peDay][8]={subjectId:peRow.subjectId,teacherId:peRow.teacherId};
+      D.TT[cid][peDay][9]={subjectId:peRow.subjectId,teacherId:peRow.teacherId};
+    }
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // PHASE 1: PE fallback — COMPLETELY DISABLED
+  //   PE is NOW handled in Phase 1-2 (5-8) and Phase 1b (9-10)
+  //   No PE should come here anymore
+  // ════════════════════════════════════════════════════════════
+  // DISABLED: Phase 1 PE fallback
+
+  // ════════════════════════════════════════════════════════════
+  // PHASE 1b: PE / शा.शि. — DISABLED
+  //   PE for 9-10 is NOW handled in Phase 1-2 above (NEW RULES)
+  //   9th: Distributed across Tue/Thu/Fri (2 divisions each)
+  //   10th: One division per day (flexible)
+  // ════════════════════════════════════════════════════════════
+  // Phase 1b completely disabled - no code here
+  
+  // ════════════════════════════════════════════════════════════
+  // PHASE 2: Work Experience (fixed day+periods for 5-8) + Scout/NCC/late-only subjects
+  //   Work Experience: FIXED day per class standard (5-8 ONLY), P7-P8-P9 triple
+  //   5th→Monday, 6th→Tuesday, 7th→Thursday, 8th→Friday
+  //   Other late-only: prefer P7+, 1/day on distinct days
+  // ════════════════════════════════════════════════════════════
+  // Step 2a: Work Experience (WEIT) — SKIP (already guaranteed in Phase 1-2)
+  //   Do NOT place WEIT here — Phase 1-2 already placed EXACTLY 3 तास
+  //   Removing fallback to prevent over-placement
+  // DISABLED: csl.forEach for WEIT
+
+  // Step 2b: Other late-only subjects (Scout, JAL, etc.) — P7+ (NOT fixed day)
+  //   BUT: Skip SCNMR (already guaranteed in Phase 0.75-FIRST)
+  const std2b=getClassStd(cls2);
+  csl.forEach(row=>{
+    const subj=D.subjects.find(x=>x.id===row.subjectId);
+    if(!isLateOnly(subj)||isPE(subj)||isWorkExperience(subj)||isSCNMR(subj))return; // Skip PE/WEIT/SCNMR!
+    const item={subjectId:row.subjectId,teacherId:row.teacherId};
+    let tgt=getTgt(row.subjectId);
+    
+    // FORCE CE to 1 तास ONLY
+    if(subj.name.includes('Competitive')||subj.code==='CE'){
+      tgt=1; // Hard limit!
+    }
+    
+    // Check if already at target BEFORE ANY placement
+    const currentUsed=Object.keys(D.TT[cid]||{}).reduce((sum,day)=>{
+      return sum+(Object.keys(D.TT[cid][day]||{}).filter(p=>D.TT[cid][day][p]?.subjectId===row.subjectId).length);
+    },0);
+    if(currentUsed>=tgt)return; // Already complete, STOP!
+    
+    // Place periods one by one, stopping when target reached
+    let placed=0;
+    shuffle(sdays);
+    for(const day of sdays){
+      if(placed>=tgt)break; // STOP when target reached
+      if(getDayUsed(day,item.subjectId)>0)continue; // One per day rule
+      if(std2b>=7&&std2b<=9&&day==='Monday')continue; // Skip Monday for 7-8-9
+      
+      const mp=maxPDay(day);
+      for(let p=lateStart;p<=mp&&placed<tgt;p++){
+        if(!slotFree(day,p))continue;
+        if(canPlace(item,day,p)){
+          doPlace(item,day,p);
+          placed++;
+          break; // Move to next day
+        }
+      }
+    }
+  });
+
+  // ════════════════════════════════════════════════════════════
+  // PHASE 3: Science Practical (separate SC1PRA/SC2PRA subjects if used)
+  //   2 consecutive, prefer P1-6, no theory-day, school-wide ≤6/day.
+  // ════════════════════════════════════════════════════════════
+  csl.forEach(row=>{
+    const subj=D.subjects.find(x=>x.id===row.subjectId);
+    if(!isSciPrac(subj))return;
+    const item={subjectId:row.subjectId,teacherId:row.teacherId};
+    const tgt=getTgt(row.subjectId);
+    // LIMIT CHECK: Stop if already at target
+    const cur=Object.keys(D.TT[cid]||{}).reduce((s,d)=>s+(Object.keys(D.TT[cid][d]||{}).filter(p=>D.TT[cid][d][p]?.subjectId===row.subjectId).length),0);
+    if(cur>=tgt)return; // Already complete
+    const grp=sciGroup(subj);
+    const sciTRow=csl.find(r=>{
+      const s=D.subjects.find(x=>x.id===r.subjectId);
+      return s&&isSciTheory(s)&&sciGroup(s)===grp;
+    });
+    shuffle(sdays);
+    for(const day of sdays){
+      if(getUsed(item.subjectId)+2>tgt)break;
+      if(schoolSciPracOnDay(day)>=6)continue;
+      const mp=maxPDay(day);
+      if(sciTRow){
+        const hasT=Object.values(D.TT[cid][day]||{}).some(cl=>cl.subjectId===sciTRow.subjectId);
+        if(hasT)continue;
+      }
+      let placed=false;
+      for(let p=2;p<=Math.min(limit-1,mp-1)&&!placed;p++){
+        if(p===sb)continue;
+        if(canConsec(item,day,p,2)){doConsec(item,day,p,2);placed=true;}
+      }
+      for(let p=lateStart;p<=mp-1&&!placed;p++){
+        if(canConsec(item,day,p,2)){doConsec(item,day,p,2);placed=true;}
+      }
+    }
+  });
+
+  // ════════════════════════════════════════════════════════════
+  // PHASE 3b: Science I & Science II — combined theory+practical subject.
+  //   Both subjects' periods come from the SAME weekly allotment (no
+  //   separate "practical" subject) — some of those periods double up
+  //   as practical time.
+  //
+  //   Rules (exact, as specified):
+  //   - Each of Science I and Science II gets ONE day with 2 consecutive
+  //     periods (used as practical time); ALL remaining periods are
+  //     spread 1-per-day across OTHER distinct days.
+  //   - Science I and Science II must NEVER fall on the same day —
+  //     each day is used by at most one of the two Science subjects.
+  //   - When both are present, we process them together so each can
+  //     see (and avoid) the other's claimed days.
+  // ════════════════════════════════════════════════════════════
+  (function placeScienceIAndII(){
+    const sciRows={};
+    ['1','2'].forEach(grp=>{
+      const row=csl.find(r=>{
+        const s=D.subjects.find(x=>x.id===r.subjectId);
+        return s&&sciGroup(s)===grp&&!isSciPrac(s);
+      });
+      if(row)sciRows[grp]=row;
+    });
+    const grpsPresent=Object.keys(sciRows);
+    if(!grpsPresent.length)return;
+
+    // Track which days are claimed by EITHER Science I or II (shared exclusion set)
+    const sciClaimedDays={}; // day -> grp that claimed it
+
+    function dayClaimedByOther(day,myGrp){
+      return sciClaimedDays[day]&&sciClaimedDays[day]!==myGrp;
+    }
+    function claimDay(day,grp){sciClaimedDays[day]=grp;}
+
+    // Process in random order so Science I doesn't always get first pick
+    const order=[...grpsPresent];shuffle(order);
+
+    order.forEach(grp=>{
+      const row=sciRows[grp];
+      const item={subjectId:row.subjectId,teacherId:row.teacherId};
+      const tgt=getTgt(row.subjectId);
+      // LIMIT CHECK: Stop if already at target
+      const cur=Object.keys(D.TT[cid]||{}).reduce((s,d)=>s+(Object.keys(D.TT[cid][d]||{}).filter(p=>D.TT[cid][d][p]?.subjectId===row.subjectId).length),0);
+      if(cur>=tgt)return; // Already complete
+      if(tgt<1)return;
+
+      // Step 1: place the 2-consecutive practical block on ONE day that
+      //   the OTHER Science subject hasn't already claimed.
+      if(tgt>=2){
+        shuffle(sdays);
+        let placedDouble=false;
+        for(const day of sdays){
+          if(dayClaimedByOther(day,grp))continue;
+          const mp=maxPDay(day);
+          let placed=false;
+          for(let p=2;p<=Math.min(limit-1,mp-1)&&!placed;p++){
+            if(p===sb)continue;
+            if(canConsec(item,day,p,2)){doConsec(item,day,p,2);placed=true;}
+          }
+          if(!placed){
+            for(let p=lateStart;p<=mp-1&&!placed;p++){
+              if(canConsec(item,day,p,2)){doConsec(item,day,p,2);placed=true;}
+            }
+          }
+          if(placed){claimDay(day,grp);placedDouble=true;break;}
+        }
+      }
+
+      // Step 2: remaining periods, 1/day on distinct NEW days that the
+      //   other Science subject hasn't claimed either.
+      shuffle(sdays);
+      for(const day of sdays){
+        if(getUsed(item.subjectId)>=tgt)break;
+        if(getDayUsed(day,item.subjectId)>0)continue; // already used by THIS subject
+        if(dayClaimedByOther(day,grp))continue;        // claimed by the OTHER Science subject
+        const mp=maxPDay(day);
+        for(let p=2;p<=mp;p++){
+          if(p===sb||p===lb)continue;
+          if(canPlace(item,day,p)){doPlace(item,day,p);claimDay(day,grp);break;}
+        }
+      }
+
+      // Step 3 (retry if still short — slots may have been full earlier).
+      //   Still respect: distinct day for THIS subject, and not claimed
+      //   by the other Science subject.
+      let retries=0;
+      while(getUsed(item.subjectId)<tgt&&retries<6){
+        shuffle(sdays);
+        let placedThisRound=false;
+        for(const day of sdays){
+          if(getUsed(item.subjectId)>=tgt)break;
+          if(getDayUsed(day,item.subjectId)>0)continue;
+          if(dayClaimedByOther(day,grp))continue;
+          const mp=maxPDay(day);
+          for(let p=1;p<=mp;p++){
+            if(p===sb||p===lb)continue;
+            if(canPlace(item,day,p)){doPlace(item,day,p);claimDay(day,grp);placedThisRound=true;break;}
+          }
+        }
+        retries++;
+        if(!placedThisRound)break;
+      }
+
+      // Step 4: absolute last resort — if STILL short, allow using a day
+      //   already claimed by the OTHER Science subject ONLY if truly no
+      //   other day has room anywhere (better to slightly bend the
+      //   same-day-exclusion than leave periods completely unplaced).
+      //   The consecutive-pair rule is still never broken.
+      if(getUsed(item.subjectId)<tgt){
+        shuffle(sdays);
+        for(const day of sdays){
+          if(getUsed(item.subjectId)>=tgt)break;
+          if(getDayUsed(day,item.subjectId)>0)continue;
+          const mp=maxPDay(day);
+          for(let p=1;p<=mp;p++){
+            if(canPlace(item,day,p)){doPlace(item,day,p);break;}
+          }
+        }
+      }
+    });
+  })();
+
+  // ════════════════════════════════════════════════════════════
+  // PHASE 3c: Hindi & Sanskrut — combined subject (6 total, 3+3)
+  //   Rule: ONLY ONE of Hindi OR Sanskrut on any given day.
+  //   Each gets 3 periods spread across 3 DISTINCT days, never overlapping.
+  // ════════════════════════════════════════════════════════════
+  (function placeHindiSanskrut(){
+    // Skip for 6th class (Hindi is standalone in Phase 3f, not combined)
+    if(is6thClass(cls2))return;
+    
+    // Find Hindi and Sanskrut subjects by explicit name match
+    const hindRows=csl.filter(r=>{const s=D.subjects.find(x=>x.id===r.subjectId);return s&&nm(s).includes('hindi');});
+    const sanskRows=csl.filter(r=>{const s=D.subjects.find(x=>x.id===r.subjectId);return s&&nm(s).includes('sanskrut');});
+    
+    if(!hindRows.length||!sanskRows.length)return; // need both subjects
+    
+    const hindRow=hindRows[0];
+    const sanskRow=sanskRows[0];
+    
+    const langUsedDays={}; // track which days each language has claimed
+    
+    // Process both subjects
+    [
+      {row:hindRow,type:'hindi',tgt:3},
+      {row:sanskRow,type:'sanskrut',tgt:3}
+    ].forEach(spec=>{
+      const item={subjectId:spec.row.subjectId,teacherId:spec.row.teacherId};
+      const otherType=spec.type==='hindi'?'sanskrut':'hindi';
+      
+      shuffle(sdays);
+      for(const day of sdays){
+        if(getUsed(item.subjectId)>=spec.tgt)break;
+        
+        // Never place on a day the OTHER subject is using
+        if(langUsedDays[day]===otherType)continue;
+        
+        // Never place 2 on same day
+        if(getDayUsed(day,item.subjectId)>0)continue;
+        
+        const mp=maxPDay(day);
+        // Try to place on this day
+        let placed=false;
+        for(let p=2;p<=mp&&!placed;p++){
+          if(p===sb||p===lb)continue;
+          if(canPlace(item,day,p)){
+            doPlace(item,day,p);
+            langUsedDays[day]=spec.type; // claim day for this language
+            placed=true;
+          }
+        }
+      }
+    });
+  })();
+
+  // ════════════════════════════════════════════════════════════
+  // PHASE 3d: Geography & History — combined subject (6 total, 3+3)
+  //   Rule: ONLY ONE of Geography OR History on any given day.
+  //   Each gets 3 periods on 3 DISTINCT days, never overlapping.
+  // ════════════════════════════════════════════════════════════
+  (function placeGeographyHistory(){
+    // Skip for 6th class (History is standalone in Phase 3f, not combined)
+    if(is6thClass(cls2))return;
+    
+    // Find Geography and History subjects by explicit name match
+    const geogRows=csl.filter(r=>{const s=D.subjects.find(x=>x.id===r.subjectId);return s&&isGeography(s);});
+    const histRows=csl.filter(r=>{const s=D.subjects.find(x=>x.id===r.subjectId);return s&&isHistory(s)&&!isGeography(s);});
+    
+    if(!geogRows.length||!histRows.length)return; // need both subjects
+    
+    const geogRow=geogRows[0]; // take first match (should be only one)
+    const histRow=histRows[0];
+    
+    const subjUsedDays={}; // track which days each subject has claimed
+    
+    // Process both subjects
+    [
+      {row:geogRow,type:'geog',tgt:3},
+      {row:histRow,type:'hist',tgt:3}
+    ].forEach(spec=>{
+      const item={subjectId:spec.row.subjectId,teacherId:spec.row.teacherId};
+      const otherType=spec.type==='geog'?'hist':'geog';
+      
+      shuffle(sdays);
+      for(const day of sdays){
+        if(getUsed(item.subjectId)>=spec.tgt)break;
+        
+        // Never place on a day the OTHER subject is using
+        if(subjUsedDays[day]===otherType)continue;
+        
+        // Never place 2 on same day
+        if(getDayUsed(day,item.subjectId)>0)continue;
+        
+        const mp=maxPDay(day);
+        // Try to place on this day
+        let placed=false;
+        for(let p=2;p<=mp&&!placed;p++){
+          if(p===sb||p===lb)continue;
+          if(canPlace(item,day,p)){
+            doPlace(item,day,p);
+            subjUsedDays[day]=spec.type; // claim day for this subject
+            placed=true;
+          }
+        }
+      }
+    });
+  })();
+
+  // ════════════════════════════════════════════════════════════
+  // PHASE 3e: General Science (6th std) — 6 तास
+  //   1 day: 2 consecutive (practical time)
+  //   4 days: 1 each (theory)
+  //   Total: 5 distinct days used
+  // ════════════════════════════════════════════════════════════
+  csl.forEach(row=>{
+    const subj=D.subjects.find(x=>x.id===row.subjectId);
+    if(!isGeneralScience(subj))return;
+    const item={subjectId:row.subjectId,teacherId:row.teacherId};
+    const tgt=getTgt(row.subjectId);
+    // LIMIT CHECK: Stop if already at target
+    const cur=Object.keys(D.TT[cid]||{}).reduce((s,d)=>s+(Object.keys(D.TT[cid][d]||{}).filter(p=>D.TT[cid][d][p]?.subjectId===row.subjectId).length),0);
+    if(cur>=tgt)return; // Already complete
+    if(tgt<1)return;
+
+    // Step 1: Try to place 2 consecutive (practical) on ONE day
+    shuffle(sdays);
+    if(tgt>=2){
+      for(const day of sdays){
+        if(getUsed(item.subjectId)+2>tgt)break;
+        const mp=maxPDay(day);
+        // Practical preferably not during breaks
+        for(let p=2;p<=Math.min(limit-1,mp-1);p++){
+          if(p===sb)continue;
+          if(canConsec(item,day,p,2)){doConsec(item,day,p,2);break;}
+        }
+      }
+    }
+
+    // Step 2: Remaining singles on distinct days
+    shuffle(sdays);
+    for(const day of sdays){
+      if(getUsed(item.subjectId)>=tgt)break;
+      if(getDayUsed(day,item.subjectId)>0)continue;
+      const mp=maxPDay(day);
+      for(let p=2;p<=mp;p++){
+        if(p===sb||p===lb)continue;
+        if(canPlace(item,day,p)){doPlace(item,day,p);break;}
+      }
+    }
+  });
+
+  // ════════════════════════════════════════════════════════════
+  // PHASE 3f: 6th Class Core Subjects (Math, English, Hindi, History)
+  //   Math = 7: 1 day double P1-P2 + 5 days single
+  //   English = 7: 1 day double (not restricted to P1-P2) + 5 days single
+  //   Hindi = 5: 5 days × 1 ONLY (never 2 on same day)
+  //   History = 3: 3 days × 1 ONLY
+  // ════════════════════════════════════════════════════════════
+  csl.forEach(row=>{
+    const subj=D.subjects.find(x=>x.id===row.subjectId);
+    if(!subj||!is6thClass(cls2))return;
+
+    const tgt=getTgt(row.subjectId);
+    // LIMIT CHECK: Stop if already at target
+    const cur=Object.keys(D.TT[cid]||{}).reduce((s,d)=>s+(Object.keys(D.TT[cid][d]||{}).filter(p=>D.TT[cid][d][p]?.subjectId===row.subjectId).length),0);
+    if(cur>=tgt)return; // Already complete
+    const item={subjectId:row.subjectId,teacherId:row.teacherId};
+    const s=nm(subj);
+
+    // Math = 7: double P1-P2 + singles
+    if(s.includes('math')&&tgt===7){
+      // Try to place double at P1-P2 on one day
+      shuffle(sdays);
+      for(const day of sdays){
+        if(getUsed(item.subjectId)>=tgt)break;
+        const mp=maxPDay(day);
+        if(1<=mp&&2<=mp&&canConsec(item,day,1,2)){doConsec(item,day,1,2);break;}
+      }
+      // Place remaining 5 singles on distinct days
+      shuffle(sdays);
+      for(const day of sdays){
+        if(getUsed(item.subjectId)>=tgt)break;
+        if(getDayUsed(day,item.subjectId)>0)continue;
+        const mp=maxPDay(day);
+        for(let p=2;p<=mp;p++){
+          if(p===sb||p===lb)continue;
+          if(canPlace(item,day,p)){doPlace(item,day,p);break;}
+        }
+      }
+      return;
+    }
+
+    // English = 7: double (anywhere except P1-P2) + singles
+    if(s.includes('eng')&&tgt===7){
+      // Try to place double (not P1-P2)
+      shuffle(sdays);
+      for(const day of sdays){
+        if(getUsed(item.subjectId)>=tgt)break;
+        const mp=maxPDay(day);
+        for(let p=2;p<=mp-1;p++){
+          if(canConsec(item,day,p,2)){doConsec(item,day,p,2);break;}
+        }
+      }
+      // Place remaining 5 singles on distinct days
+      shuffle(sdays);
+      for(const day of sdays){
+        if(getUsed(item.subjectId)>=tgt)break;
+        if(getDayUsed(day,item.subjectId)>0)continue;
+        const mp=maxPDay(day);
+        for(let p=2;p<=mp;p++){
+          if(p===sb||p===lb)continue;
+          if(canPlace(item,day,p)){doPlace(item,day,p);break;}
+        }
+      }
+      return;
+    }
+
+    // Hindi = 5: exactly 5 days × 1 ONLY (never 2 on same day)
+    if(s.includes('hindi')&&tgt===5){
+      shuffle(sdays);
+      for(const day of sdays){
+        if(getUsed(item.subjectId)>=tgt)break;
+        if(getDayUsed(day,item.subjectId)>0)continue; // never 2 on same day
+        const mp=maxPDay(day);
+        for(let p=2;p<=mp;p++){
+          if(p===sb||p===lb)continue;
+          if(canPlace(item,day,p)){doPlace(item,day,p);break;}
+        }
+      }
+      return;
+    }
+
+    // History = 3: 3 days × 1 ONLY (6th class only, not combined with Geography)
+    if(s.includes('hist')&&tgt===3&&!s.includes('geog')){
+      shuffle(sdays);
+      for(const day of sdays){
+        if(getUsed(item.subjectId)>=tgt)break;
+        if(getDayUsed(day,item.subjectId)>0)continue; // never 2 on same day
+        const mp=maxPDay(day);
+        for(let p=2;p<=mp;p++){
+          if(p===sb||p===lb)continue;
+          if(canPlace(item,day,p)){doPlace(item,day,p);break;}
+        }
+      }
+      return;
+    }
+  });
+
+  // ════════════════════════════════════════════════════════════
+  // PHASE 3.7: Math 1 & Math 2 — separate teachers, 4-4 तास
+  //   Each gets: 2 single days (1-1) + 1 double day (2)
+  //   Different days (no overlap)
+  //   Assigned manually by teacher/section in Editor
+  // ════════════════════════════════════════════════════════════
+  csl.forEach(row=>{
+    const subj=D.subjects.find(x=>x.id===row.subjectId);
+    if(!subj||(!isMath1(subj)&&!isMath2(subj)))return;
+    const item={subjectId:row.subjectId,teacherId:row.teacherId};
+    const tgt=getTgt(row.subjectId);
+    // LIMIT CHECK: Stop if already at target
+    const cur=Object.keys(D.TT[cid]||{}).reduce((s,d)=>s+(Object.keys(D.TT[cid][d]||{}).filter(p=>D.TT[cid][d][p]?.subjectId===row.subjectId).length),0);
+    if(cur>=tgt)return; // Already complete
+    if(tgt!==4)return; // Math 1/2 should have 4 periods each
+    
+    const isMath1Subj=isMath1(subj);
+    const otherMathId=csl.find(r=>{
+      const s=D.subjects.find(x=>x.id===r.subjectId);
+      return s&&(isMath1Subj?isMath2(s):isMath1(s));
+    })?.subjectId;
+    
+    // Step 1: Try to place 1 double (2 consecutive) on a day
+    shuffle(sdays);
+    let doublePlaced=false;
+    for(const day of sdays){
+      if(doublePlaced)break;
+      if(getDayUsed(day,item.subjectId)>0)continue;
+      // Prefer not to use same day as other Math subject (if both exist)
+      if(otherMathId&&getDayUsed(day,otherMathId)>0)continue;
+      const mp=maxPDay(day);
+      for(let p=2;p<=mp-1;p++){
+        if(p===sb||p===lb)continue;
+        if(canConsec(item,day,p,2)){doConsec(item,day,p,2);doublePlaced=true;break;}
+      }
+    }
+    
+    // Step 2: Place 2 singles on distinct OTHER days
+    shuffle(sdays);
+    for(const day of sdays){
+      if(getUsed(item.subjectId)>=tgt)break;
+      if(getDayUsed(day,item.subjectId)>0)continue;
+      if(otherMathId&&getDayUsed(day,otherMathId)>0)continue;
+      const mp=maxPDay(day);
+      for(let p=2;p<=mp;p++){
+        if(p===sb||p===lb)continue;
+        if(canPlace(item,day,p)){doPlace(item,day,p);break;}
+      }
+    }
+  });
+
+  // ════════════════════════════════════════════════════════════
+  // PHASE 4: Computer / Sanganak
+
+  // ════════════════════════════════════════════════════════════
+  // PHASE 4: Computer / Sanganak — PRIMARY: 2 consecutive periods.
+  //   FALLBACK only if no consecutive slot found: 2 distinct days, 1/day.
+  //   School-wide: only ONE class can use the Computer lab at any
+  //   given day+period (single lab available).
+  // ════════════════════════════════════════════════════════════
+  csl.forEach(row=>{
+    const subj=D.subjects.find(x=>x.id===row.subjectId);
+    if(!isComputer(subj))return;
+    const item={subjectId:row.subjectId,teacherId:row.teacherId};
+    const tgt=getTgt(row.subjectId);
+    // LIMIT CHECK: Stop if already at target
+    const cur=Object.keys(D.TT[cid]||{}).reduce((s,d)=>s+(Object.keys(D.TT[cid][d]||{}).filter(p=>D.TT[cid][d][p]?.subjectId===row.subjectId).length),0);
+    if(cur>=tgt)return; // Already complete
+
+    // Primary: pair as consecutive 2-blocks
+    while(getUsed(item.subjectId)+2<=tgt){
+      shuffle(sdays);
+      let placed=false;
+      for(const day of sdays){
+        const mp=maxPDay(day);
+        for(let p=lateStart;p<=mp-1&&!placed;p++){
+          if(canConsec(item,day,p,2)){doConsec(item,day,p,2);placed=true;}
+        }
+        if(!placed){
+          for(let p=2;p<=mp-1&&!placed;p++){
+            if(canConsec(item,day,p,2)){doConsec(item,day,p,2);placed=true;}
+          }
+        }
+        if(placed)break;
+      }
+      if(!placed)break; // no consecutive slot found anywhere — fall back to singles below
+    }
+    // Fallback: remaining as singles, 1/day, distinct days, only-if-adjacent on repeat day
+    shuffle(sdays);
+    for(const day of sdays){
+      if(getUsed(item.subjectId)>=tgt)break;
+      if(getDayUsed(day,item.subjectId)>0)continue;
+      const mp=maxPDay(day);
+      for(let p=2;p<=mp;p++){
+        if(canPlace(item,day,p)){doPlace(item,day,p);break;}
+      }
+    }
+  });
+
+  // ════════════════════════════════════════════════════════════
+  // PHASE 4b: परिसर अभ्यास १ (5th std only) — 1 day double + rest singles
+  // ════════════════════════════════════════════════════════════
+  if(cls2&&['5th','5','V'].includes(cls2.std)){
+    csl.forEach(row=>{
+      const subj=D.subjects.find(x=>x.id===row.subjectId);
+      if(!isPS1(subj))return;
+      const item={subjectId:row.subjectId,teacherId:row.teacherId};
+      const tgt=getTgt(row.subjectId);
+      // LIMIT CHECK: Stop if already at target
+      const cur=Object.keys(D.TT[cid]||{}).reduce((s,d)=>s+(Object.keys(D.TT[cid][d]||{}).filter(p=>D.TT[cid][d][p]?.subjectId===row.subjectId).length),0);
+      if(cur>=tgt)return; // Already complete
+      shuffle(sdays);
+      let dblDone=false;
+      for(const day of sdays){
+        if(dblDone)break;
+        const mp=maxPDay(day);
+        for(let p=2;p<=mp-1;p++){
+          if(p>limit)continue;
+          if(canConsec(item,day,p,2)){doConsec(item,day,p,2);dblDone=true;break;}
+        }
+      }
+      shuffle(sdays);
+      for(const day of sdays){
+        if(getUsed(item.subjectId)>=tgt)break;
+        if(getDayUsed(day,item.subjectId)>0)continue;
+        const mp=maxPDay(day);
+        for(let p=2;p<=mp;p++){
+          if(p>limit)continue;
+          if(canPlace(item,day,p)){doPlace(item,day,p);break;}
+        }
+      }
+    });
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // PHASE 5: (reserved — class teacher already forced in Phase 0)
+  // ════════════════════════════════════════════════════════════
+
+  // ════════════════════════════════════════════════════════════
+  // PHASE 6: Subjects with EXACTLY 7 or 8 weekly periods (any normal
+  //   subject — excludes PE, Science Practical/I/II, Computer, Scout/
+  //   NCC group, PS1, since those already have their own rules above):
+  //     7 periods → 5 days × 1 + 1 day × 2 (consecutive)
+  //     8 periods → 4 days × 1 + 2 days × 2 (consecutive)
+  //   Special: if this subject is the CLASS TEACHER's subject, the
+  //   2-consecutive block MUST be P1-P2 (since P1 is always reserved
+  //   for them already).
+  // ════════════════════════════════════════════════════════════
+  csl.forEach(row=>{
+    const subj=D.subjects.find(x=>x.id===row.subjectId);
+    if(!subj)return;
+    if(isPE(subj)||isSciPrac(subj)||isComputer(subj)||isLateOnly(subj)||isPS1(subj)||isSCNMR(subj)||isWorkExperience(subj))return;
+    if(sciGroup(subj))return; // Science I/II handled in Phase 3b
+    // Skip 6th class Math/English (handled in Phase 3f)
+    if(is6thClass(cls2)&&nm(subj).match(/math|eng/))return;
+    const tgt=getTgt(row.subjectId);
+    // LIMIT CHECK: Stop if already at target
+    const cur=Object.keys(D.TT[cid]||{}).reduce((s,d)=>s+(Object.keys(D.TT[cid][d]||{}).filter(p=>D.TT[cid][d][p]?.subjectId===row.subjectId).length),0);
+    if(cur>=tgt)return; // Already complete
+    if(tgt!==7&&tgt!==8)return;
+
+    const dblNeeded=tgt===8?2:1;
+    const item={subjectId:row.subjectId,teacherId:row.teacherId};
+    const isCTSubject=ctRow&&ctRow.subjectId===row.subjectId;
+    let dblDone=0;
+
+    if(isCTSubject){
+      // Already handled in Phase 0b (right after class-teacher P1 placement).
+      // Just count how many doubles already landed, so the "remaining periods"
+      // logic below knows how many singles are still needed.
+      dblDone=dblNeeded; // Phase 0b guarantees this (or did its best)
+    } else {
+      shuffle(sdays);
+      // For 5th std: restrict double to P1-P2 (like class teacher subjects)
+      const is5th=cls2?.std==='5'||cls2?.std==='5th'||cls2?.std==='पाचवी';
+      const minP=is5th?1:2;
+      const maxP=is5th?2:(limit-1);
+      for(const day of sdays){
+        if(dblDone>=dblNeeded)break;
+        const mp=maxPDay(day);
+        for(let p=minP;p<=Math.min(maxP,mp-1);p++){
+          if(subj.type==='theory'&&p>limit)continue;
+          if(canConsec(item,day,p,2)){doConsec(item,day,p,2);dblDone++;break;}
+        }
+      }
+    }
+
+    // Remaining periods: 1/day on distinct (new) days
+    shuffle(sdays);
+    for(const day of sdays){
+      if(getUsed(item.subjectId)>=tgt)break;
+      if(getDayUsed(day,item.subjectId)>0)continue;
+      const mp=maxPDay(day);
+      for(let p=2;p<=mp;p++){
+        if(canPlace(item,day,p)){doPlace(item,day,p);break;}
+      }
+    }
+  });
+
+  // ════════════════════════════════════════════════════════════
+  // PHASE 7: All remaining normal subjects — DEFAULT RULE:
+  //   N weekly periods → N distinct days, 1 period/day (N = 2,3,4,5,6).
+  //   If a subject still has periods left after trying all distinct
+  //   days (slots were full), pair the leftover as consecutive on
+  //   whichever day has room — NEVER place a 2nd period on the same
+  //   day unless it's adjacent to the first.
+  // ════════════════════════════════════════════════════════════
+  const remainMap={};
+  csl.forEach(row=>{
+    const subj=D.subjects.find(x=>x.id===row.subjectId);if(!subj)return;
+    // Skip 6th class subjects already handled in Phase 3f
+    if(is6thClass(cls2)&&nm(subj).match(/math|eng|hindi|hist/))return;
+    // Skip subjects handled in earlier phases
+    if(isSCNMR(subj)||isMath1(subj)||isMath2(subj)||isWorkExperience(subj)||isPE(subj))return;
+    remainMap[row.subjectId]={teacherId:row.teacherId,type:subj.type,
+      priority:subj.priority||'normal',
+      rem:getTgt(row.subjectId)-getUsed(row.subjectId)};
+  });
+
+  let slots=[];
+  days.forEach(day=>{
+    const mp=maxPDay(day);
+    for(let p=2;p<=mp;p++)slots.push({day,p}); // P1 reserved for class teacher
+  });
+
+  const subjIds=Object.keys(remainMap).map(Number);
+  // Most-constrained-first: subjects needing MORE distinct days (higher rem)
+  // get priority, since they have less flexibility to "fit around" others.
+  // A subject with rem=2 can easily slot into whatever 2 days remain free;
+  // a subject with rem=6 needs ALL 6 days, so it must claim its days first.
+  // Within subjects that need the SAME number of days, shuffle their order
+  // randomly each round — otherwise two 6-period subjects (e.g. Marathi,
+  // English) would always process in the same relative order and always
+  // grab the same periods every single day (looks too "patterned").
+  shuffle(subjIds);
+  subjIds.sort((a,b)=>remainMap[b].rem-remainMap[a].rem);
+
+  // Sub-phase 7a: place 1/day on distinct days for each subject's remaining
+  // periods. ROUND-ROBIN across subjects in most-constrained-first order so
+  // that high-period subjects (needing many distinct days) get first pick,
+  // while low-period subjects (more flexible) fill in afterwards.
+  // To avoid every multi-day subject landing on the same period every day
+  // (e.g. Marathi always at P2, English always at P3 — which looks too
+  // "patterned"), we give each (subject, round) combination a randomized
+  // preferred period within its allowed range, instead of always taking
+  // the very first free slot in shuffled order.
+  for(let pass=0;pass<=2;pass++){
+    let anyPlacedThisPass=true;
+    while(anyPlacedThisPass){
+      anyPlacedThisPass=false;
+      // Re-shuffle THEN re-sort by rem (descending) each round: this keeps
+      // the most-constrained-first guarantee (subjects needing more days
+      // still go first) while randomizing the relative order of subjects
+      // that have the SAME remaining-days count — so two 6-period subjects
+      // don't always process in the same order and grab the same periods.
+      shuffle(subjIds);
+      subjIds.sort((a,b)=>remainMap[b].rem-remainMap[a].rem);
+      for(const sid of subjIds){
+        const info=remainMap[sid];
+        if(info.rem<=0)continue;
+        const item={subjectId:sid,teacherId:info.teacherId};
+        shuffle(slots);
+        // Try a few different random "preferred period" anchors before
+        // settling for whatever shuffled order gives — this spreads
+        // subjects across different periods on different days instead of
+        // always grabbing the same low-numbered free period.
+        let bestChoice=null;
+        const candidatePeriods=[];
+        for(const {day,p} of slots){
+          if(!slotFree(day,p))continue;
+          if(getDayUsed(day,sid)>0)continue;
+          // Skip Monday P7-P8-P9 for 7-8-9 classes (SCNMR reserved)
+          const std7a=getClassStd(cls2);
+          if(std7a>=7&&std7a<=9&&day==='Monday'&&p>=7&&p<=9)continue;
+          // Skip teacher's special day (if subject is NOT SCNMR/WEIT)
+          const subj=D.subjects.find(x=>x.id===sid);
+          if(!isSCNMR(subj)&&!isWorkExperience(subj)){
+            const tid=info.teacherId;
+            if(teacherSpecialDays[tid]?.scmnrDay===day || teacherSpecialDays[tid]?.weitDay===day){
+              continue; // teacher's reserved day, skip for other subjects
+            }
+          }
+          const isLatePeriod=p>limit;
+          if(pass<2){
+            if(isLatePeriod&&info.type==='theory')continue;
+            if(!isLatePeriod&&info.type==='practical')continue;
+          }
+          if(!canPlace(item,day,p))continue;
+          candidatePeriods.push({day,p});
+        }
+        if(candidatePeriods.length){
+          // pick a genuinely random candidate (not just "first in shuffled array")
+          bestChoice=candidatePeriods[Math.floor(Math.random()*candidatePeriods.length)];
+          doPlace(item,bestChoice.day,bestChoice.p);info.rem--;anyPlacedThisPass=true;
+        }
+      }
+    }
+  }
+
+  // Sub-phase 7b: any leftover (not enough distinct days were available) —
+  // pair as consecutive on a day that already has 1 period of this subject,
+  // or any day with room, but ALWAYS adjacent if doubling up.
+  subjIds.forEach(sid=>{
+    const info=remainMap[sid];
+    if(info.rem<=0)return;
+    const item={subjectId:sid,teacherId:info.teacherId};
+    while(info.rem>=2){
+      shuffle(slots);
+      let placed=false;
+      for(const {day,p} of slots){
+        // Skip teacher's special day (if subject is NOT SCNMR/WEIT)
+        const subj=D.subjects.find(x=>x.id===sid);
+        if(!isSCNMR(subj)&&!isWorkExperience(subj)){
+          const tid=info.teacherId;
+          if(teacherSpecialDays[tid]?.scmnrDay===day || teacherSpecialDays[tid]?.weitDay===day){
+            continue; // teacher's reserved day, skip
+          }
+        }
+        if(canConsec(item,day,p,2)){doConsec(item,day,p,2);info.rem-=2;placed=true;break;}
+      }
+      if(!placed)break;
+    }
+    // odd leftover: single, adjacent-only if day already has this subject
+    while(info.rem>0){
+      shuffle(slots);
+      let placed=false;
+      for(const {day,p} of slots){
+        // Skip teacher's special day (if subject is NOT SCNMR/WEIT)
+        const subj=D.subjects.find(x=>x.id===sid);
+        if(!isSCNMR(subj)&&!isWorkExperience(subj)){
+          const tid=info.teacherId;
+          if(teacherSpecialDays[tid]?.scmnrDay===day || teacherSpecialDays[tid]?.weitDay===day){
+            continue; // teacher's reserved day, skip
+          }
+        }
+        if(!slotFree(day,p))continue;
+        if(getDayUsed(day,sid)===1&&!isAdjacentToSame(sid,day,p))continue;
+        if(!canPlace(item,day,p))continue;
+        doPlace(item,day,p);info.rem--;placed=true;break;
+      }
+      if(!placed)break;
+    }
+  });
+
+  // Sub-phase 7c: last-resort widen search (include P1) for anything still
+  // short — adjacency rule is STILL enforced, never broken. Run multiple
+  // rounds since placing one subject may free up new pairing opportunities
+  // for another, and shuffled order changes each round.
+  let allSlots=[];
+  days.forEach(day=>{
+    const mp=maxPDay(day);
+    for(let p=1;p<=mp;p++)allSlots.push({day,p});
+  });
+  for(let round=0;round<5;round++){
+    let anyPlaced=false;
+    shuffle(subjIds);
+    subjIds.forEach(sid=>{
+      const info=remainMap[sid];
+      if(info.rem<=0)return;
+      const item={subjectId:sid,teacherId:info.teacherId};
+      shuffle(allSlots);
+      for(const {day,p} of allSlots){
+        if(info.rem<=0)break;
+        // Skip Monday P7-P8-P9 for 7-8-9 classes (SCNMR reserved)
+        const std7c=getClassStd(cls2);
+        if(std7c>=7&&std7c<=9&&day==='Monday'&&p>=7&&p<=9)continue;
+        // Skip teacher's special day (if subject is NOT SCNMR/WEIT)
+        const subj=D.subjects.find(x=>x.id===sid);
+        if(!isSCNMR(subj)&&!isWorkExperience(subj)){
+          const tid=info.teacherId;
+          if(teacherSpecialDays[tid]?.scmnrDay===day || teacherSpecialDays[tid]?.weitDay===day){
+            continue; // teacher's reserved day, skip
+          }
+        }
+        if(!slotFree(day,p))continue;
+        if(getDayUsed(day,sid)===1&&!isAdjacentToSame(sid,day,p))continue;
+        if(!canPlace(item,day,p))continue;
+        doPlace(item,day,p);info.rem--;anyPlaced=true;
+      }
+    });
+    if(!anyPlaced)break;
+  }
+
+  // CONFLICT DETECTION: Find teachers in 2 classes same time
+  const conflicts=[];
+  const teacherSlots={};
+  Object.keys(D.TT).forEach(cid=>{
+    const cls=D.classes.find(c=>c.id===cid);
+    if(!cls)return;
+    Object.keys(D.TT[cid]).forEach(day=>{
+      Object.keys(D.TT[cid][day]).forEach(p=>{
+        const cell=D.TT[cid][day][p];
+        if(!cell?.teacherId)return;
+        const key=`${cell.teacherId}-${day}-${p}`;
+        if(!teacherSlots[key])teacherSlots[key]=[];
+        teacherSlots[key].push({cid,cls});
+      });
+    });
+  });
+  Object.keys(teacherSlots).forEach(key=>{
+    const slots=teacherSlots[key];
+    if(slots.length>1){
+      const [tid,day,p]=key.split('-');
+      const teacher=D.teachers.find(t=>t.id===tid);
+      const classStrs=slots.map(s=>`<strong>${s.cls.std}-${s.cls.division}</strong>`).join(' & ');
+      const editLinks=slots.map(s=>`<span style="cursor:pointer;color:blue;text-decoration:underline;font-size:.85rem;" onclick="document.getElementById('pCSel').value='${s.cid}';pClass('one');setTimeout(()=>alert('वर्ग ${s.cls.std}-${s.cls.division} लोड झाला। ${day} P${p} तपासा आणि शिक्षक बदला।'),100)">📝 ${s.cls.std}-${s.cls.division} fix करा</span>`).join(' | ');
+      conflicts.push({teacher:teacher?.name||'?',day,period:`P${p}`,classes:classStrs,editLinks});
+    }
+  });
+  
+  // Store conflicts globally for Errors page
+  window.currentConflicts=conflicts;
+  
+  if(conflicts.length>0){
+    // Display in Editor tab
+    const html=conflicts.map(c=>`<div style="background:#fff3cd;border-left:4px solid #ffc107;padding:10px;margin:5px 0;border-radius:3px;"><strong style="color:#8b6914;">⚠️ ${c.teacher}</strong> — <strong>${c.day} ${c.period}</strong> — एकसच वेळी ${c.classes} वर्गात!<br><small style="color:#666;">Fix: ${c.editLinks}</small></div>`).join('');
+    const container=document.getElementById('ttarea');
+    if(container){
+      const existing=container.querySelector('[id="conflicts-container"]');
+      if(existing)existing.remove();
+      const div=document.createElement('div');
+      div.id='conflicts-container';
+      div.innerHTML=`<div style="background:#f8d7da;border:2px solid #f5c6cb;padding:15px;margin:10px 0;border-radius:5px;"><strong style="color:#721c24;font-size:1.1rem;">❌ शिक्षक विरोध सापडले!</strong> (<a href="#" style="color:blue;cursor:pointer;" onclick="SP('errors',this);return false;">सर्व Errors पहा</a>)<br>${html}</div>`;
+      container.insertBefore(div,container.firstChild);
+    }
+    
+    // Populate Errors page
+    refreshErrors();
+  } else {
+    // No conflicts
+    window.currentConflicts=[];
+    const container=document.getElementById('ttarea');
+    if(container){
+      const existing=container.querySelector('[id="conflicts-container"]');
+      if(existing)existing.remove();
+    }
+  }
+
+  // RULE 1 VALIDATION: Total periods must match exactly
+  let totalAssigned=0, totalRequired=0;
+  csl.forEach(row=>{
+    const have=getUsed(row.subjectId);
+    const need=getTgt(row.subjectId);
+    totalAssigned+=have;
+    totalRequired+=need;
+  });
+  
+  const leftover=csl.filter(row=>getUsed(row.subjectId)<getTgt(row.subjectId)).map(r=>{
+    const s=D.subjects.find(x=>x.id===r.subjectId);
+    return{name:s?.name||'?',have:getUsed(r.subjectId),need:getTgt(r.subjectId)};
+  });
+  
+  // Rule 1 violation: assigned != required
+  if(totalAssigned!==totalRequired){
+    return{ok:false,leftover,reason:'Rule 1 violation: assigned '+totalAssigned+' != required '+totalRequired};
+  }
+  
+  return{ok:leftover.length===0,leftover};
+}
+
+// Single-class wrapper (used by the Editor tab's ⚡ Auto-Generate button)
+function autoFill(){
+  const cid=document.getElementById('ttsel').value;if(!cid)return toast('Class select करा!','error');
+  if(!D.CS[cid]?.length)return toast('आधी subjects assign करा!','error');
+  if(!confirm('Auto-generate? (सध्याचा timetable clear होईल)'))return;
+
+  const result=generateForClass(cid);
+  save();loadEditor();checkLoads();
+
+  if(!result.ok){
+    toast('⚠️ न मिळालेले तास: '+result.leftover.map(r=>`${r.name}(${r.have}/${r.need})`).join(', '),'warn',7000);
+  } else toast('✅ सर्व नियमांनुसार timetable तयार!');
+}
+
+// All-classes wrapper (Setup-wide "सर्व वर्ग Auto-Generate" button).
+// Processes classes in std+division order, sequentially, so that each
+// class's generation sees every PREVIOUSLY-generated class's timetable —
+// this lets teacher-conflict checks naturally prevent overlaps across the
+// whole school, exactly like generating them one-by-one in order, but
+// automated. Progress is reported via a live-updating toast/modal.
+function autoFillAllClasses(){
+  if(!D.classes.length)return toast('आधी वर्ग add करा!','error');
+  const withSubj=D.classes.filter(c=>D.CS[c.id]?.length);
+  if(!withSubj.length)return toast('कोणत्याही वर्गाला विषय assign केलेले नाहीत!','error');
+  if(!confirm(`सर्व ${withSubj.length} वर्गांचे timetable auto-generate करायचे? (प्रत्येक वर्गाचा सध्याचा timetable clear होईल). वेळ लागू शकतो — कृपया पूर्ण होईपर्यंत वाट पहा.`))return;
+
+  // Sort by std (numeric where possible) then division — predictable, stable order
+  const stdOrder=(s)=>{const n=parseInt(s);return isNaN(n)?999:n;};
+  const sorted=[...withSubj].sort((a,b)=>{
+    const sa=stdOrder(a.std),sb=stdOrder(b.std);
+    if(sa!==sb)return sa-sb;
+    return(a.division||'').localeCompare(b.division||'');
+  });
+
+  showProgressModal(sorted.length);
+
+  let allOk=true;
+  const failedList=[];
+  let i=0;
+
+  function step(){
+    if(i>=sorted.length){
+      finishProgressModal(allOk,failedList);
+      return;
+    }
+    const cls=sorted[i];
+    updateProgressModal(i+1,sorted.length,`${cls.std}-${cls.division}`);
+    const result=generateForClass(cls.id);
+    if(!result.ok){
+      allOk=false;
+      failedList.push(`${cls.std}-${cls.division}: `+result.leftover.map(r=>`${r.name}(${r.have}/${r.need})`).join(', '));
+    }
+    i++;
+    // setTimeout lets the browser repaint the progress UI between classes
+    // (otherwise the tab would freeze and look unresponsive for 36 classes)
+    setTimeout(step,10);
+  }
+  step();
+}
+
+function showProgressModal(total){
+  let m=document.getElementById('progModal');
+  if(!m){
+    m=document.createElement('div');
+    m.id='progModal';
+    m.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99999;display:flex;align-items:center;justify-content:center;';
+    m.innerHTML=`<div style="background:#fff;border-radius:12px;padding:22px 26px;max-width:380px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3);">
+      <div style="font-weight:700;color:#1a3a5c;font-size:.95rem;margin-bottom:10px;">⚡ सर्व वर्गांचे Timetable तयार होत आहे...</div>
+      <div id="progText" style="font-size:.8rem;color:#555;margin-bottom:8px;">सुरू होत आहे...</div>
+      <div style="height:8px;background:#e0e0e0;border-radius:4px;overflow:hidden;"><div id="progBar" style="height:100%;width:0%;background:#27ae60;transition:width .2s;"></div></div>
+    </div>`;
+    document.body.appendChild(m);
+  }
+  m.style.display='flex';
+}
+function updateProgressModal(done,total,label){
+  const t=document.getElementById('progText');
+  const b=document.getElementById('progBar');
+  if(t)t.textContent=`(${done}/${total}) ${label} तयार होत आहे...`;
+  if(b)b.style.width=Math.round(done/total*100)+'%';
+}
+function finishProgressModal(allOk,failedList){
+  const m=document.getElementById('progModal');
+  if(m)m.style.display='none';
+  save();
+  // Refresh whatever view is currently open
+  if(document.getElementById('ttsel')?.value)loadEditor();
+  checkLoads();
+  if(allOk){
+    toast(`✅ सर्व ${failedList.length===0?'':''}वर्गांचे timetable तयार झाले!`,'success',6000);
+  } else {
+    toast(`⚠️ ${failedList.length} वर्गांत काही तास कमी राहिले. तपशील खाली कन्सोलमध्ये (किंवा Reports → Free Periods मध्ये) बघा.`,'warn',8000);
+    console.log('Auto-generate (all classes) — incomplete:\n'+failedList.join('\n'));
+  }
+}
+
+// ===== VIEW =====
+function renderCV(){const cid=document.getElementById('vcsel').value;if(!cid)return;document.getElementById('cva').innerHTML=buildTTGrid(cid,false);}
+function renderTV(){
+  const tid=+document.getElementById('vtsel').value;if(!tid)return;
+  const teacher=D.teachers.find(t=>t.id===tid);const c=D.cfg;const days=c.workingDays||[];
+  const rows=fullRows();
+  const aS=m2t12(t2m(c.assemblyTime||'07:15'));const aE=m2t12(t2m(c.assemblyTime||'07:15')+(+(c.assemblyDuration||15)));
+  let h=`<div style="margin-bottom:8px;font-weight:700;color:var(--pr);">👨‍🏫 ${teacher.name} (${teacher.code})</div>
+  <div class="ttw"><table class="ptt"><thead><tr><th>वेळ</th>`;
+  days.forEach(day=>{const iS=isShort(day);h+=`<th class="${iS?'sh-day':''}">${day}<br><span style="font-size:.58rem;">${iS?'6T':'9T'}</span></th>`;});
+  h+='</tr></thead><tbody>';
+  // Assembly
+  h+=`<tr><td class="time-col">🙏<br>${aS}<br>${aE}</td>`;
+  days.forEach(()=>h+=`<td class="assembly" style="font-size:.61rem;">Assembly</td>`);h+='</tr>';
+  rows.forEach(row=>{
+    if(row.type==='p'){
+      const p=row.pt.p;const tStr=`${m2t12(t2m(row.pt.s))} –<br>${m2t12(t2m(row.pt.e))}`;
+      h+=`<tr><td class="time-col">${tStr}<br><span style="color:#888;font-size:.58rem;">P${p}</span></td>`;
+      days.forEach(day=>{const mp=maxP(day);
+        if(p>mp){h+=`<td class="off">—</td>`;return;}
+        let found=null;D.classes.forEach(cls=>{const cell=D.TT[cls.id]?.[day]?.[p];if(cell?.teacherId===tid)found={cls,cell};});
+        // Also check Abhyasika for this teacher
+        if(found){const subj=D.subjects.find(x=>x.id===found.cell.subjectId);
+          h+=`<td class="filled${found.cell.isDouble?' dbl-l':found.cell.isDoubleCont?' dbl-r':''}" style="border-top:2px solid ${subj?.color||'#3498db'}">
+            <span class="cell-subj" style="color:${subj?.color||'#1a3a5c'}">${subj?.code||'?'}${found.cell.isDouble?'×2':''}</span>
+            <span class="cell-info">${found.cls.std}-${found.cls.division}</span></td>`;
+        } else h+=`<td style="color:#ddd;font-size:.6rem;">—</td>`;
+      });h+='</tr>';
+    } else {
+      let cl='brk',em='☕',lbl='';
+      if(row.type==='lb'){cl='lnch';em='🍱';lbl=`Lunch`;}
+      else if(row.type==='ab'){cl='abhy';em='📖';lbl='Abhyasika';}
+      else if(row.type==='abr'){cl='abhr';em='☕';lbl='Break';}
+      else lbl='Break';
+      const tStr=row.s?`${m2t12(t2m(row.s))} –<br>${m2t12(t2m(row.e))}`:'';
+      h+=`<tr><td class="time-col">${tStr}</td>`;
+      days.forEach(day=>{
+        if((row.type==='ab')&&!isShort(day)){
+          // Show which classes have Abhyasika supervised by this teacher
+          const abhyCls=D.classes.filter(cls=>cls.classTeacherId===tid);
+          if(abhyCls.length)h+=`<td class="${cl}">${em} ${lbl}<br><span style="font-size:.59rem;">${abhyCls.map(x=>`${x.std}-${x.division}`).join(', ')}</span></td>`;
+          else h+=`<td class="${cl}">${em} ${lbl}</td>`;
+        } else if((row.type==='ab'||row.type==='abr')&&isShort(day))h+=`<td class="off">—</td>`;
+        else h+=`<td class="${cl}">${em}<br><span style="font-size:.59rem;">${lbl}</span></td>`;
+      });h+='</tr>';
+    }
+  });
+  // Load summary
+  let pCnt={};let total=0;D.classes.forEach(cls=>(c.workingDays||[]).forEach(day=>{for(let p=1;p<=maxP(day);p++){const cell=D.TT[cls.id]?.[day]?.[p];if(cell?.teacherId===tid){const s=D.subjects.find(x=>x.id===cell.subjectId);pCnt[s?.name||'?']=(pCnt[s?.name||'?']||0)+1;total++;}}}));
+  const mx=+(c.maxTeacherPeriods||36);
+  h+=`</tbody></table></div><div style="margin-top:9px;padding:8px;background:var(--lt);border-radius:6px;font-size:.78rem;"><strong>Weekly Load: <span style="color:${total>mx?'#e74c3c':'#27ae60'}">${total}/${mx}</span></strong> &nbsp; ${Object.entries(pCnt).map(([k,v])=>`<span class="chip">${k}:${v}</span>`).join(' ')}</div>`;
+  document.getElementById('tva').innerHTML=h;
+}
+// ===== PRINT ENGINE =====
+function pSchHdr(forPrint){
+  const c=D.cfg;const aS=m2t12(t2m(c.assemblyTime||'07:15'));const aE=m2t12(t2m(c.assemblyTime||'07:15')+(+(c.assemblyDuration||15)));
+  return`<div style="text-align:center;border:2px solid #1a3a5c;border-radius:5px;padding:7px 10px;margin-bottom:8px;">
+    <div style="font-size:${forPrint===3?'14px':'13px'};font-weight:900;color:#1a3a5c;">श्री वारणा विद्यालय (Shree Warana Vidyalaya)</div>
+    <div style="font-size:9px;color:#444;margin-top:1px;">वारणानगर, ता: पन्हाळा, जि: कोल्हापूर | Warananagar, Tal: Panhala, Dist: Kolhapur</div>
+    <div style="font-size:8px;color:#777;margin-top:1px;">🙏 Assembly: ${aS}–${aE} | शाळा सुरू: ${m2t12(t2m(c.startTime||'07:30'))}</div>
+  </div>`;
+}
+function pClsHdr(cls,ct){
+  return`<div style="text-align:center;margin-bottom:6px;">
+    <div style="font-size:12px;font-weight:900;color:#1a3a5c;">वर्ग: ${cls.std} | तुकडी: ${cls.division} | माध्यम: ${cls.medium}</div>
+    <div style="font-size:10px;color:#444;">${ct?`वर्गशिक्षक: ${ct.name}`:'वर्गशिक्षक: —'} &nbsp;|&nbsp; विद्यार्थी संख्या: ${cls.strength||'—'}</div>
+  </div>`;
+}
+function pSig(ctName){
+  const mp=D.cfg.mukhyadhyapakName||'मुख्याध्यापक';
+  return`<table style="width:100%;margin-top:14px;"><tr>
+    <td style="width:42%;vertical-align:bottom;padding:4px 0;">
+      <div style="font-size:8.5px;color:#444;">वर्गशिक्षक स्वाक्षरी / Class Teacher</div>
+      <div style="border-bottom:1px solid #333;margin-top:20px;width:85%;"></div>
+      <div style="font-size:8.5px;color:#666;margin-top:2px;">${ctName||'वर्गशिक्षक'}</div>
+    </td><td style="width:16%;"></td>
+    <td style="width:42%;vertical-align:bottom;padding:4px 0;text-align:right;">
+      <div style="font-size:8.5px;color:#444;">मुख्याध्यापक स्वाक्षरी / Headmaster</div>
+      <div style="border-bottom:1px solid #333;margin-top:20px;margin-left:auto;width:85%;"></div>
+      <div style="font-size:8.5px;color:#666;margin-top:2px;">${mp}</div>
+    </td>
+  </tr></table>
+  <div style="text-align:center;margin-top:6px;">
+    <span style="font-size:7px;color:#aaa;">&#169; ppm</span>
+  </div>`;
+}
+function pSigSchool(){
+  const mp=D.cfg.mukhyadhyapakName||'मुख्याध्यापक';
+  return`<div style="margin-top:14px;text-align:right;padding-right:10%;">
+    <div style="font-size:8.5px;color:#444;">मुख्याध्यापक स्वाक्षरी / Headmaster</div>
+    <div style="border-bottom:1px solid #333;margin-top:20px;width:200px;margin-left:auto;"></div>
+    <div style="font-size:8.5px;color:#666;margin-top:2px;">${mp}</div>
+  </div>
+  <div style="text-align:center;margin-top:6px;">
+    <span style="font-size:7px;color:#aaa;">&#169; ppm</span>
+  </div>`;
+}
+
+// A4 class timetable: rows=time, cols=days, last col=subject teachers
+function buildA4Cls(cid){
+  const c=D.cfg;const days=c.workingDays||[];const tt=D.TT[cid]||{};const cls=D.classes.find(x=>x.id===cid);
+  const ct=D.teachers.find(t=>t.id===cls?.classTeacherId);
+  const csl=D.CS[cid]||[];const rows=fullRows();
+  const aS=m2t12(t2m(c.assemblyTime||'07:15'));const aE=m2t12(t2m(c.assemblyTime||'07:15')+(+(c.assemblyDuration||15)));
+  const spT=csl.map(r=>{const s=D.subjects.find(x=>x.id===r.subjectId);const t=D.teachers.find(x=>x.id===r.teacherId);
+    return s&&t?`<div style="font-size:7.5px;line-height:1.5;"><span style="font-weight:700;color:${s.color||'#1a3a5c'};">${s.code}:</span> ${t.name}</div>`:''}).filter(Boolean).join('');
+  const totalR=rows.length+1;
+  let h=`<table style="width:100%;border-collapse:collapse;font-size:8.5px;table-layout:fixed;">
+  <colgroup><col style="width:65px;"><col style="width:11%;" span="${days.length}"><col style="width:120px;"></colgroup>
+  <thead><tr><th style="background:#1a3a5c;color:#fff;padding:4px 3px;text-align:center;border:1px solid #aaa;font-size:7.5px;">वेळ / Time</th>`;
+  days.forEach(day=>{const iS=isShort(day);
+    h+=`<th style="background:${iS?'#7f3d00':'#1a3a5c'};color:#fff;padding:4px 3px;text-align:center;border:1px solid #aaa;font-size:7.5px;">${day}<br>${iS?'(6T)':''}</th>`;});
+  h+=`<th style="background:#1a3a5c;color:#fff;padding:4px 5px;border:1px solid #aaa;font-size:7.5px;">विषय शिक्षक</th></tr></thead><tbody>`;
+  // Assembly
+  h+=`<tr style="background:#fff9c4;"><td style="text-align:center;border:1px solid #ccc;padding:3px 2px;font-size:7.5px;font-weight:700;color:#856404;">🙏<br>${aS}<br>${aE}</td>`;
+  days.forEach(()=>h+=`<td style="border:1px solid #ccc;text-align:center;font-size:7.5px;color:#856404;font-weight:700;">Assembly<br>प्रार्थना</td>`);
+  h+=`<td rowspan="${totalR}" style="border:1px solid #ccc;padding:4px 5px;vertical-align:top;background:#f8fafc;">${spT||'—'}</td></tr>`;
+  rows.forEach(row=>{
+    if(row.type==='p'){
+      const p=row.pt.p;const tStr=`${m2t12(t2m(row.pt.s))} –<br>${m2t12(t2m(row.pt.e))}`;
+      h+=`<tr><td style="text-align:center;border:1px solid #ccc;padding:2px;font-size:8px;font-weight:700;background:#f8fafc;color:#1a3a5c;">${tStr}<br><span style="font-size:7px;color:#888;">P${p}</span></td>`;
+      days.forEach(day=>{const mp=maxP(day);
+        if(p>mp){h+=`<td style="background:#f0f0f0;border:1px solid #ccc;text-align:center;font-size:7px;color:#bbb;">सुट्टी</td>`;return;}
+        const cell=tt[day]?.[p];
+        if(cell?.isDoubleCont){const subj=D.subjects.find(x=>x.id===cell.subjectId);const tchr=D.teachers.find(x=>x.id===cell.teacherId);
+          h+=`<td style="background:#eff8ff;border:1px solid #ccc;border-top:2px solid ${subj?.color||'#3498db'};text-align:center;padding:2px;">
+            <strong style="font-size:9.5px;color:${subj?.color||'#1a3a5c'};opacity:.75;">${subj?.name||'?'}</strong><br>
+            <span style="font-size:8px;color:#555;">↩ /${tchr?.code||'?'}</span></td>`;return;}
+        if(cell?.subjectId){const subj=D.subjects.find(x=>x.id===cell.subjectId);const tchr=D.teachers.find(x=>x.id===cell.teacherId);
+          h+=`<td style="background:#eaf5fb;border:1px solid #ccc;border-top:2px solid ${subj?.color||'#3498db'};text-align:center;padding:2px;">
+            <strong style="font-size:9.5px;color:${subj?.color||'#1a3a5c'};">${subj?.name||'?'}${cell.isDouble?'×2':''}</strong><br>
+            <span style="font-size:8px;color:#555;">/${tchr?.code||'?'}</span></td>`;
+        } else h+=`<td style="background:#fafafa;border:1px solid #ccc;text-align:center;font-size:7px;color:#ccc;">—</td>`;
+      });h+='</tr>';
+    } else {
+      let bg='#fef9e7',col='#b7770d',em='☕',lbl='Break';
+      if(row.type==='lb'){bg='#fff3e0';col='#d35400';em='🍱';lbl=`Lunch ${row.dur}m`;}
+      else if(row.type==='ab'){bg='#e8f5e9';col='#2e7d32';em='📖';lbl=`Abhyasika ${row.dur}m`;}
+      else if(row.type==='abr'){bg='#f3e5f5';col='#7b1fa2';}
+      else lbl=`Break ${row.dur}m`;
+      const tStr=row.s?`${m2t12(t2m(row.s))} –<br>${m2t12(t2m(row.e))}`:'';
+      h+=`<tr style="background:${bg};"><td style="text-align:center;border:1px solid #ccc;padding:2px;font-size:7.5px;font-weight:700;color:${col};">${tStr}</td>`;
+      days.forEach(day=>{
+        if((row.type==='ab'||row.type==='abr')&&isShort(day))h+=`<td style="background:#f0f0f0;border:1px solid #ccc;text-align:center;font-size:7px;color:#bbb;">—</td>`;
+        else h+=`<td style="background:${bg};border:1px solid #ccc;text-align:center;font-size:7.5px;color:${col};font-weight:700;">${em}<br>${lbl}</td>`;
+      });h+='</tr>';
+    }
+  });
+  return h+'</tbody></table>';
+}
+
+// A4 Teacher timetable
+function buildA4Teacher(teacher){
+  const c=D.cfg;const days=c.workingDays||[];const rows=fullRows();const nd=days.length;
+  const aS=m2t12(t2m(c.assemblyTime||'07:15'));const aE=m2t12(t2m(c.assemblyTime||'07:15')+(+(c.assemblyDuration||15)));
+  // Build class-subject summary for last column
+  const clsSummary=[];
+  D.classes.forEach(cls=>{
+    const subjMap={};
+    days.forEach(day=>{for(let p=1;p<=maxP(day);p++){
+      const cell=D.TT[cls.id]?.[day]?.[p];
+      if(cell?.teacherId===teacher.id&&!cell.isDoubleCont){
+        const s=D.subjects.find(x=>x.id===cell.subjectId);
+        if(s)subjMap[s.id]=(subjMap[s.id]||0)+1;
+      }
+    }});
+    Object.entries(subjMap).forEach(([sid,cnt])=>{
+      const s=D.subjects.find(x=>x.id===+sid);
+      clsSummary.push({cls,s,cnt});
+    });
+  });
+  const load=getTLoad(teacher.id);const mx=+(c.maxTeacherPeriods||36);
+  const summaryHTML=clsSummary.map(({cls,s,cnt})=>
+    `<div style="font-size:7px;line-height:1.6;border-bottom:1px dotted #ddd;padding:1px 0;">
+      <span style="font-weight:700;color:#1a3a5c;">${cls.std}-${cls.division}</span>
+      <span style="color:${s?.color||'#333'};"> / ${s?.name||'?'}</span>
+      <span style="color:#888;"> (${cnt}T)</span>
+    </div>`).join('');
+  const totalHTML=`<div style="margin-top:5px;padding:3px 0;border-top:1.5px solid #1a3a5c;">
+    <span style="font-size:7.5px;font-weight:700;color:${load>mx?'#e74c3c':'#1a3a5c'};">एकूण: ${load}/${mx} तास</span>
+  </div>`;
+  // colgroup: time col same % as day cols, then summary col
+  const dayPct=Math.floor(90/nd);
+  let h=`<table style="width:100%;border-collapse:collapse;font-size:8px;table-layout:fixed;">
+  <colgroup><col style="width:${dayPct}%;"><col style="width:${dayPct}%;" span="${nd}"><col style="width:18%;"></colgroup>
+  <thead><tr>
+    <th style="background:#1a3a5c;color:#fff;padding:3px 2px;border:1px solid #aaa;text-align:center;font-size:7px;">वेळ</th>`;
+  days.forEach(day=>{const iS=isShort(day);
+    h+=`<th style="background:${iS?'#7f3d00':'#1a3a5c'};color:#fff;padding:3px 2px;border:1px solid #aaa;text-align:center;font-size:7px;">${day}${iS?'<br>(6T)':''}</th>`;});
+  h+=`<th style="background:#2e7d32;color:#fff;padding:3px 3px;border:1px solid #aaa;text-align:center;font-size:7px;">वर्ग / विषय<br>Workload</th>
+  </tr></thead><tbody>`;
+  const totalR=rows.length+1;
+  h+=`<tr style="background:#fff9c4;">
+    <td style="text-align:center;border:1px solid #ccc;padding:2px;font-size:7px;color:#856404;font-weight:700;">🙏<br>${aS}<br>${aE}</td>`;
+  days.forEach(()=>h+=`<td style="border:1px solid #ccc;text-align:center;font-size:6.5px;color:#856404;">Assembly</td>`);
+  h+=`<td rowspan="${totalR}" style="border:1px solid #ccc;padding:4px 5px;vertical-align:top;background:#f0fff4;">${summaryHTML||'<span style="font-size:7px;color:#bbb;">—</span>'}${totalHTML}</td></tr>`;
+  rows.forEach(row=>{
+    if(row.type==='p'){
+      const p=row.pt.p;const tStr=`${m2t12(t2m(row.pt.s))}<br>${m2t12(t2m(row.pt.e))}`;
+      h+=`<tr><td style="text-align:center;border:1px solid #ccc;padding:2px;font-size:8px;font-weight:700;background:#f8fafc;color:#1a3a5c;">${tStr}<br><span style="font-size:7px;">P${p}</span></td>`;
+      days.forEach(day=>{const mp=maxP(day);
+        if(p>mp){h+=`<td style="background:#f0f0f0;border:1px solid #ccc;text-align:center;font-size:7px;color:#bbb;">सुट्टी</td>`;return;}
+        let found=null;D.classes.forEach(cls=>{const cell=D.TT[cls.id]?.[day]?.[p];if(cell?.teacherId===teacher.id)found={cls,cell};});
+        if(found){const subj=D.subjects.find(x=>x.id===found.cell.subjectId);
+          h+=`<td style="background:#eaf5fb;border:1px solid #ccc;border-top:2px solid ${subj?.color||'#3498db'};text-align:center;padding:2px;">
+            <strong style="font-size:9.5px;color:${subj?.color||'#1a3a5c'};">${found.cls.std}-${found.cls.division}</strong><br>
+            <span style="font-size:8px;color:#555;">${subj?.code||'?'}${found.cell.isDouble?'×2':''}</span></td>`;
+        } else h+=`<td style="background:#fafafa;border:1px solid #ccc;text-align:center;font-size:7px;color:#ccc;">—</td>`;
+      });h+='</tr>';
+    } else {
+      let bg='#fef9e7',col='#b7770d',em='☕',lbl='Break';
+      if(row.type==='lb'){bg='#fff3e0';col='#d35400';em='🍱';lbl='Lunch';}
+      else if(row.type==='ab'){bg='#e8f5e9';col='#2e7d32';em='📖';lbl='Abhyasika';
+        const abhyCls=D.classes.filter(cls=>cls.classTeacherId===teacher.id);
+        const tStr=row.s?`${m2t12(t2m(row.s))}<br>${m2t12(t2m(row.e))}`:'';
+        h+=`<tr style="background:${bg};"><td style="text-align:center;border:1px solid #ccc;padding:2px;font-size:6.5px;color:${col};font-weight:700;">${tStr}</td>`;
+        days.forEach(day=>{if(isShort(day))h+=`<td style="background:#f0f0f0;border:1px solid #ccc;text-align:center;font-size:7px;color:#bbb;">—</td>`;
+          else{const isCT=abhyCls.length>0;h+=`<td style="background:${bg};border:1px solid #ccc;text-align:center;font-size:7px;color:${col};font-weight:700;">📖 Abhyasika${isCT?`<br><span style='font-size:6px;'>${abhyCls.map(x=>`${x.std}-${x.division}`).join(', ')}</span>`:''}</td>`;}});
+        h+='</tr>';return;
+      } else if(row.type==='abr'){bg='#f3e5f5';col='#7b1fa2';}
+      const tStr=row.s?`${m2t12(t2m(row.s))}<br>${m2t12(t2m(row.e))}`:'';
+      h+=`<tr style="background:${bg};"><td style="text-align:center;border:1px solid #ccc;padding:2px;font-size:6.5px;color:${col};font-weight:700;">${tStr}</td>`;
+      days.forEach(day=>{if((row.type==='abr')&&isShort(day))h+=`<td style="background:#f0f0f0;border:1px solid #ccc;text-align:center;font-size:7px;color:#bbb;">—</td>`;
+        else h+=`<td style="background:${bg};border:1px solid #ccc;text-align:center;font-size:7px;color:${col};">${em}<br>${lbl}</td>`;});h+='</tr>';
+    }
+  });
+  h+=`</tbody></table>`;
+  return h;
+}
+
+// A3 SCHOOL TIMETABLE
+// Layout: Time | Mon(9 sub-cols) | Tue(9) | Wed(9) | Teachers col | Thu(9) | Fri(9) | Sat(9)
+function buildA3School(){
+  const c=D.cfg;const allDays=c.workingDays||[];
+  const np=+(c.numPeriods||9);const sdp=+(c.shortDayPeriods||6);
+  const fss='6px';
+
+  const dayOrder=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const sortedDays=dayOrder.filter(d=>allDays.includes(d));
+  const grp1=sortedDays.filter(d=>['Monday','Tuesday','Wednesday'].includes(d));
+  const grp2=sortedDays.filter(d=>['Thursday','Friday','Saturday'].includes(d));
+
+  function dayP(day){return isShort(day)?sdp:np;}
+  function dayBg(day){return isShort(day)?'#7f3d00':'#1a3a5c';}
+
+  // Build header: row1 = day names (each spans np sub-cols), teacher col in middle
+  // row2 = P1..P9 sub-cols under each day
+  let html=`<table style="width:100%;border-collapse:collapse;font-size:${fss};table-layout:fixed;">
+  <colgroup>`;
+  // Each day col = np sub-cols, each sub-col width = small
+  grp1.forEach(day=>{for(let p=0;p<dayP(day);p++)html+=`<col>`;});
+  html+=`<col style="width:60px;">`; // teacher name col
+  grp2.forEach(day=>{for(let p=0;p<dayP(day);p++)html+=`<col>`;});
+  html+=`</colgroup><thead>`;
+
+  // Row 1: Day headers
+  html+=`<tr>`;
+  grp1.forEach(day=>{
+    const iS=isShort(day);
+    html+=`<th colspan="${dayP(day)}" style="background:${dayBg(day)};color:#fff;border:1px solid #777;font-size:6.5px;text-align:center;padding:3px 1px;font-weight:700;">${day}${iS?` (${sdp}T)`:''}</th>`;
+  });
+  html+=`<th rowspan="2" style="background:#2e7d32;color:#fff;border:2px solid #1a5c2e;font-size:6.5px;text-align:center;vertical-align:middle;padding:2px;">शिक्षक<br>नाव</th>`;
+  grp2.forEach(day=>{
+    const iS=isShort(day);
+    html+=`<th colspan="${dayP(day)}" style="background:${dayBg(day)};color:#fff;border:1px solid #777;font-size:6.5px;text-align:center;padding:3px 1px;font-weight:700;">${day}${iS?` (${sdp}T)`:''}</th>`;
+  });
+  html+=`</tr>`;
+
+  // Row 2: P1..P9 sub-cols under each day
+  html+=`<tr>`;
+  [...grp1,...grp2].forEach(day=>{
+    for(let p=1;p<=dayP(day);p++){
+      html+=`<th style="background:#2c3e6b;color:#fff;border:1px solid #666;font-size:5.5px;text-align:center;padding:1px 0;">P${p}</th>`;
+    }
+  });
+  html+=`</tr></thead><tbody>`;
+
+  // Data rows: one row per teacher
+  D.teachers.forEach((teacher,ti)=>{
+    const load=getTLoad(teacher.id);const mx=+(c.maxTeacherPeriods||36);
+    const rowBg=ti%2===0?'#ffffff':'#f5f8fc';
+
+    html+=`<tr style="background:${rowBg};">`;
+
+    // grp1 days: np cells each
+    [...grp1,...grp2].forEach((day,di)=>{
+      // Insert teacher name col between grp1 and grp2
+      if(di===grp1.length){
+        html+=`<td style="background:#1a3a5c;border:2px solid #0d2237;text-align:center;vertical-align:middle;padding:2px 1px;">
+          <div style="font-size:7.5px;font-weight:900;color:#fff;line-height:1.3;word-break:break-word;">${teacher.name}</div>
+          <div style="font-size:5.5px;color:#7ec8e3;margin-top:1px;">${teacher.code}</div>
+          <div style="font-size:5.5px;color:${load>mx?'#ff8a80':'#a5d6a7'};margin-top:1px;">${load}/${mx}T</div>
+        </td>`;
+      }
+
+      for(let p=1;p<=dayP(day);p++){
+        let found=null;
+        D.classes.forEach(cls=>{
+          const cell=(D.TT[cls.id]||{})[day]?.[p];
+          if(cell?.teacherId===teacher.id&&!cell.isDoubleCont)found={cls,cell};
+        });
+        if(found){
+          const subj=D.subjects.find(x=>x.id===found.cell.subjectId);
+          const sc=subj?.color||'#3498db';
+          html+=`<td style="border:1px solid #ccc;border-top:2px solid ${sc};padding:1px 0;text-align:center;background:#eaf5fb;">
+            <div style="font-size:6.5px;font-weight:700;color:#1a3a5c;line-height:1.3;">${found.cls.std}-${found.cls.division}</div>
+            <div style="font-size:6px;color:${sc};line-height:1.2;">${subj?.code||'?'}${found.cell.isDouble?'×2':''}</div>
+          </td>`;
+        } else {
+          html+=`<td style="border:1px solid #eee;background:${rowBg};text-align:center;font-size:6px;color:#e0e0e0;">—</td>`;
+        }
+      }
+    });
+
+    // Add teacher name col after last grp1 day if grp2 is empty
+    if(grp2.length===0){
+      html+=`<td style="background:#1a3a5c;border:2px solid #0d2237;text-align:center;vertical-align:middle;padding:2px 1px;">
+        <div style="font-size:7.5px;font-weight:900;color:#fff;line-height:1.3;">${teacher.name}</div>
+        <div style="font-size:5.5px;color:#7ec8e3;">${teacher.code} — ${load}T</div>
+      </td>`;
+    }
+
+    html+=`</tr>`;
+    // thick separator between teachers
+    const totalCols=[...grp1,...grp2].reduce((s,d)=>s+dayP(d),0)+1;
+    html+=`<tr><td colspan="${totalCols}" style="background:#c8d8e8;height:2px;padding:0;border:none;"></td></tr>`;
+  });
+
+  html+=`</tbody></table>`;
+  return html;
+}
+
+function openPW(body,title,size){
+  const w=window.open('','_blank');
+  const pgSize=size===3?'A3 landscape':'A4 landscape';
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'DM Sans',sans-serif;padding:0;background:#fff;}
+  .pb{page-break-after:always;margin:10px 0;border-bottom:1px dashed #ccc;}
+  @page{size:${pgSize};margin:10mm;}@media print{.pb{page-break-after:always!important;}body{padding:0;}}
+  </style></head><body>${body}<script>window.onload=function(){setTimeout(function(){window.print();},500);};<\/script></body></html>`);
+  w.document.close();
+}
+
+function pClass(mode){
+  const classes=mode==='one'?[D.classes.find(c=>c.id===document.getElementById('pCSel').value)].filter(Boolean):D.classes;
+  if(!classes.length)return toast('No classes!','error');
+  const html=classes.map((cls,i)=>{const ct=D.teachers.find(t=>t.id===cls.classTeacherId);
+    return`<div>${pSchHdr(4)}${pClsHdr(cls,ct)}${buildA4Cls(cls.id)}${pSig(ct?.name)}</div>${i<classes.length-1?'<div class="pb"></div>':''}`;}).join('');
+  openPW(html,'वर्गानुसार तासिका',4);
+}
+function pTeacher(mode){
+  const teachers=mode==='one'?[D.teachers.find(t=>t.id===+document.getElementById('pTSel').value)].filter(Boolean):D.teachers;
+  if(!teachers.length)return toast('No teachers!','error');
+  const html=teachers.map((t,i)=>{
+    const load=getTLoad(t.id);const mx=+(D.cfg.maxTeacherPeriods||36);
+    return`<div>${pSchHdr(4)}<div style="text-align:center;margin-bottom:6px;">
+      <div style="font-size:13px;font-weight:900;color:#1a3a5c;">शिक्षक तासिका पत्रक</div>
+      <div style="font-size:10px;color:#444;">नाव: <strong>${t.name}</strong> (${t.code}) | साप्ताहिक भार: <strong style="color:${load>mx?'#e74c3c':'#27ae60'}">${load}/${mx}</strong></div>
+    </div>${buildA4Teacher(t)}${pSig(t.name)}</div>${i<teachers.length-1?'<div class="pb"></div>':''}`;}).join('');
+  openPW(html,'शिक्षकानुसार तासिका',4);
+}
+function pSchool(){
+  if(!D.classes.length)return toast('No classes!','error');
+  const html=pSchHdr(3)+`<div style="text-align:center;font-size:13px;font-weight:900;color:#1a3a5c;margin-bottom:8px;">संपूर्ण शाळा — एकत्रित तासिका पत्रक</div>`+buildA3School()+pSigSchool();
+  openPW(html,'संपूर्ण शाळा तासिका',3);
+}
+
+// ===== REPORTS =====
+function rLoad(){
+  const c=D.cfg;const mx=+(c.maxTeacherPeriods||36);const days=c.workingDays||[];
+  if(!D.teachers.length){document.getElementById('loadRep').innerHTML='<div class="es"><p>No teachers.</p></div>';return;}
+  let h='<div class="ttw"><table class="dt"><thead><tr><th>#</th><th>Teacher</th><th>Code</th>';
+  days.forEach(d=>h+=`<th>${d.substring(0,3)}</th>`);h+=`<th>Total</th><th>Status</th></tr></thead><tbody>`;
+  D.teachers.forEach((t,i)=>{
+    let dl={};let total=0;days.forEach(day=>dl[day]=0);
+    D.classes.forEach(cls=>days.forEach(day=>{for(let p=1;p<=maxP(day);p++){const cell=D.TT[cls.id]?.[day]?.[p];if(cell?.teacherId===t.id){dl[day]++;total++;}}}));
+    const col=total>mx?'#e74c3c':total>mx*.85?'#f39c12':'#27ae60';
+    h+=`<tr><td>${i+1}</td><td><strong>${t.name}</strong></td><td><span class="badge bgg">${t.code}</span></td>`;
+    days.forEach(d=>h+=`<td style="text-align:center;">${dl[d]||0}</td>`);
+    h+=`<td style="font-weight:700;color:${col};text-align:center;">${total}/${mx}</td>
+    <td>${total>mx?'<span class="badge br">⚠️ Over</span>':total>mx*.85?'<span class="badge bo2">⚡ High</span>':'<span class="badge bgg">✓ OK</span>'}</td></tr>`;
+  });h+='</tbody></table></div>';document.getElementById('loadRep').innerHTML=h;
+}
+function rSubj(){
+  const c=D.cfg;const days=c.workingDays||[];
+  let h='<div class="ttw"><table class="dt"><thead><tr><th>Class</th><th>Subject</th><th>Target</th><th>Assigned</th><th></th></tr></thead><tbody>';
+  D.classes.forEach(cls=>{(D.CS[cls.id]||[]).forEach(row=>{
+    const subj=D.subjects.find(s=>s.id===row.subjectId);let asgn=0;
+    days.forEach(day=>{for(let p=1;p<=maxP(day);p++){const cell=D.TT[cls.id]?.[day]?.[p];if(cell?.subjectId===row.subjectId)asgn++;}});
+    const tgt=row.periodsPerWeek||3;const ok=asgn>=tgt;
+    h+=`<tr><td><strong>${cls.std}-${cls.division}</strong></td><td>${subj?.name||'?'} <span class="badge" style="background:${subj?.color||'#eee'}18;color:${subj?.color||'#333'};">${subj?.code}</span></td>
+    <td style="text-align:center;">${tgt}</td><td style="text-align:center;font-weight:700;color:${ok?'#27ae60':'#e74c3c'};">${asgn}</td>
+    <td>${ok?'<span class="badge bgg">✓</span>':'<span class="badge br">⚠️ Short</span>'}</td></tr>`;});});
+  h+='</tbody></table></div>';document.getElementById('subjRep').innerHTML=h;
+}
+function rFree(){
+  const c=D.cfg;const days=c.workingDays||[];let total=0;
+  let h='<div class="ttw"><table class="dt"><thead><tr><th>Class</th><th>Day</th><th>Empty Periods</th><th>Count</th></tr></thead><tbody>';
+  D.classes.forEach(cls=>days.forEach(day=>{const empty=[];for(let p=1;p<=maxP(day);p++){const cell=D.TT[cls.id]?.[day]?.[p];if(!cell?.subjectId)empty.push(`P${p}`);}
+    if(empty.length){h+=`<tr><td><strong>${cls.std}-${cls.division}</strong></td><td>${day}</td><td>${empty.join(', ')}</td><td><span class="badge br">${empty.length}</span></td></tr>`;total+=empty.length;}}));
+  h+=`</tbody></table></div><div style="margin-top:7px;font-size:.78rem;color:var(--mu);">Total empty: <strong style="color:#e74c3c;">${total}</strong></div>`;
+  document.getElementById('freeRep').innerHTML=h;
+}
+
+// ===== ERRORS PAGE FUNCTIONS =====
+function refreshErrors(){
+  const container=document.getElementById('errorsContainer');
+  if(!container)return;
+  const conflicts=window.currentConflicts||[];
+  if(conflicts.length===0){
+    container.innerHTML=`<div style="text-align:center;color:#999;padding:30px;"><p style="font-size:18px;">✅ कोणीही विरोध नाहीत!</p><p style="font-size:12px;color:#aaa;">सब ठीक है! सभी शिक्षक सही जगह पर हैं।</p></div>`;
+    return;
+  }
+  const html=conflicts.map((c,i)=>`
+    <div style="background:#fff3cd;border-left:5px solid #ffc107;padding:12px;margin:8px 0;border-radius:4px;">
+      <div style="font-weight:bold;color:#8b6914;">⚠️ #${i+1} ${c.teacher} — <strong>${c.day} ${c.period}</strong></div>
+      <div style="color:#555;margin:5px 0;">एकसच वेळी: ${c.classes}</div>
+      <div style="font-size:.9rem;color:#666;margin-top:8px;">
+        Fix करा: ${c.editLinks}
+      </div>
+    </div>
+  `).join('');
+  container.innerHTML=html;
+}
+
+function printErrors(){
+  const conflicts=window.currentConflicts||[];
+  if(conflicts.length===0){
+    alert('कोणीही विरोध नाहीत!');
+    return;
+  }
+  const w=window.open('','print','width=1200,height=800');
+  const html=conflicts.map((c,i)=>`
+    <tr>
+      <td style="border:1px solid #ddd;padding:10px;">${i+1}</td>
+      <td style="border:1px solid #ddd;padding:10px;"><strong>${c.teacher}</strong></td>
+      <td style="border:1px solid #ddd;padding:10px;">${c.day}</td>
+      <td style="border:1px solid #ddd;padding:10px;"><strong>${c.period}</strong></td>
+      <td style="border:1px solid #ddd;padding:10px;">${c.classes}</td>
+    </tr>
+  `).join('');
+  w.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>शिक्षक विरोध अहवाल</title>
+      <style>
+        body{font-family:Arial,sans-serif;margin:20px;background:#f5f5f5;}
+        .title{font-size:28px;font-weight:bold;color:#721c24;margin-bottom:10px;}
+        .date{font-size:12px;color:#999;margin-bottom:20px;}
+        table{width:100%;border-collapse:collapse;background:white;margin-top:20px;box-shadow:0 2px 4px rgba(0,0,0,.1);}
+        th{background:#f8d7da;color:#721c24;padding:12px;text-align:left;font-weight:bold;border:1px solid #ddd;}
+        .footer{margin-top:30px;font-size:12px;color:#999;text-align:center;}
+      </style>
+    </head>
+    <body>
+      <div class="title">❌ शिक्षक विरोध अहवाल</div>
+      <div class="date">Generated: ${new Date().toLocaleDateString('mr-IN')} ${new Date().toLocaleTimeString('mr-IN')}</div>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>शिक्षक नाव</th>
+            <th>दिवस</th>
+            <th>तास</th>
+            <th>विरोधाचे वर्ग</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${html}
+        </tbody>
+      </table>
+      <div class="footer">
+        Shree Warana Vidyalaya Timetable System
+      </div>
+    </body>
+    </html>
+  `);
+  w.document.close();
+  setTimeout(()=>w.print(),500);
+}
+
+// ===== AI ASSISTANT =====
+function analyzeGaps(){
+  const out=document.getElementById('aiOutput');
+  const gaps=[];
+  const summary={};
+  
+  // Analyze each class
+  Object.keys(D.TT).forEach(cid=>{
+    const cls=D.classes.find(c=>c.id===cid);
+    if(!cls)return;
+    const cs=D.CS.filter(c=>c.classId===cid)||[];
+    
+    // Check each subject
+    cs.forEach(row=>{
+      const tgt=row.periodsPerWeek||0;
+      if(tgt===0)return;
+      const placed=Object.keys(D.TT[cid]||{}).reduce((s,d)=>s+(Object.keys(D.TT[cid][d]||{}).filter(p=>D.TT[cid][d][p]?.subjectId===row.subjectId).length),0);
+      if(placed<tgt){
+        const subj=D.subjects.find(s=>s.id===row.subjectId);
+        gaps.push({cls:`${cls.std}-${cls.division}`,subject:subj?.name||'?',need:tgt-placed,target:tgt,placed});
+      }
+    });
+  });
+  
+  if(gaps.length===0){
+    out.innerHTML='<div style="text-align:center;padding:20px;"><p style="font-size:18px;color:#27ae60;">✅ कोणीही तास कमी नाहीत!</p><p>सर्व विषय पूर्ण आहेत।</p></div>';
+    return;
+  }
+  
+  const html=gaps.map((g,i)=>`
+    <div style="background:#fff3cd;border-left:4px solid #ffc107;padding:12px;margin:8px 0;border-radius:4px;">
+      <div style="font-weight:bold;color:#8b6914;">⚠️ #${i+1} ${g.cls} - ${g.subject}</div>
+      <div style="color:#555;margin:5px 0;">Target: ${g.target} तास | Placed: ${g.placed} | Missing: <strong>${g.need} तास</strong></div>
+    </div>
+  `).join('');
+  
+  out.innerHTML=`
+    <div style="background:#f8d7da;border:2px solid #f5c6cb;padding:15px;margin:10px 0;border-radius:5px;">
+      <strong style="color:#721c24;font-size:1.1rem;">📊 Gap Analysis</strong>
+      <p style="color:#666;margin-top:10px;font-size:14px;">मिळाले ${gaps.length} विषय ज्यांना तास हवे आहेत।</p>
+    </div>
+    ${html}
+    <div style="text-align:center;margin-top:20px;">
+      <button class="btn bg2" onclick="aiAutoFill()" style="padding:12px 20px;font-size:14px;">✨ AI Auto-Fill करा</button>
+    </div>
+  `;
+  window.gapAnalysis=gaps;
+}
+
+function aiAutoFill(){
+  if(!window.gapAnalysis || window.gapAnalysis.length===0){
+    alert('पहिले "Analyze Gaps" click करा!');
+    return;
+  }
+  
+  const out=document.getElementById('aiOutput');
+  const gaps=window.gapAnalysis;
+  const results=[];
+  
+  gaps.forEach(gap=>{
+    const cls=D.classes.find(c=>`${c.std}-${c.division}`==gap.cls);
+    if(!cls)return;
+    const cid=cls.id;
+    const subj=D.subjects.find(s=>s.name===gap.subject);
+    if(!subj)return;
+    const cs=D.CS.find(c=>c.classId===cid && c.subjectId===subj.id);
+    if(!cs)return;
+    
+    // Try to fill remaining तास
+    let filled=0;
+    const days=D.cfg?.workingDays||['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    for(let d of days){
+      if(filled>=gap.need)break;
+      if(!D.TT[cid][d])D.TT[cid][d]={};
+      for(let p=1;p<=9;p++){
+        if(filled>=gap.need)break;
+        if(!D.TT[cid][d][p]){
+          D.TT[cid][d][p]={subjectId:subj.id,teacherId:cs.teacherId};
+          filled++;
+        }
+      }
+    }
+    
+    if(filled>0){
+      results.push({cls:gap.cls,subject:gap.subject,filled,remaining:gap.need-filled});
+    }
+  });
+  
+  const html=results.map(r=>`
+    <div style="background:#d4edda;border-left:4px solid #28a745;padding:12px;margin:8px 0;border-radius:4px;">
+      <div style="font-weight:bold;color:#155724;">✅ ${r.cls} - ${r.subject}</div>
+      <div style="color:#555;margin:5px 0;"> ${r.filled} तास भरलो | Remaining: ${r.remaining}</div>
+    </div>
+  `).join('');
+  
+  out.innerHTML=`
+    <div style="background:#d4edda;border:2px solid #c3e6cb;padding:15px;margin:10px 0;border-radius:5px;">
+      <strong style="color:#155724;font-size:1.1rem;">✅ AI Auto-Fill Complete!</strong>
+      <p style="color:#666;margin-top:10px;">${results.length} विषयांना तास भरलो।</p>
+    </div>
+    ${html}
+    <div style="text-align:center;margin-top:20px;">
+      <button class="btn bk" onclick="SP('editor',this);alert('Editor tab मध्ये जा आणि verify करा!')">👉 Editor Tab मध्ये जा</button>
+    </div>
+  `;
+  
+  toast('AI ने तास भरलो! Editor मध्ये verify करा।','ok');
+}
+
+function clearAIAnalysis(){
+  document.getElementById('aiOutput').innerHTML=`
+    <div style="text-align:center;color:#999;padding:20px;">
+      <p>🤖 AI Assistant तयार आहे!</p>
+      <p style="font-size:12px;color:#aaa;">Click "Analyze Gaps" to find missing subjects</p>
+    </div>
+  `;
+  window.gapAnalysis=null;
+}
+
+// ===== PRINT REPORTS =====
+function printReport(elemId, reportName){
+  const elem=document.getElementById(elemId);
+  if(!elem){alert('Report not found!');return;}
+  const content=elem.innerHTML;
+  const w=window.open('','print','width=1200,height=800');
+  w.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>${reportName}</title>
+      <style>
+        body{font-family:Arial,sans-serif;margin:20px;background:#f5f5f5;}
+        table{width:100%;border-collapse:collapse;background:white;margin-bottom:20px;box-shadow:0 2px 4px rgba(0,0,0,.1);}
+        th{background:#1a3a52;color:white;padding:12px;text-align:left;font-weight:bold;border:1px solid #ddd;}
+        td{padding:10px;border:1px solid #ddd;}
+        tr:nth-child(even){background:#f9f9f9;}
+        tr:hover{background:#f0f0f0;}
+        .title{font-size:24px;font-weight:bold;margin-bottom:20px;color:#1a3a52;}
+        .subtitle{font-size:14px;color:#666;margin-bottom:20px;}
+        .success{color:green;}
+        .warning{color:#ff9800;font-weight:bold;}
+        .short{color:#e74c3c;font-weight:bold;}
+        @media print{body{background:white;}table{box-shadow:none;}}
+      </style>
+    </head>
+    <body>
+      <div class="title">📊 ${reportName}</div>
+      <div class="subtitle">Generated: ${new Date().toLocaleDateString('mr-IN')} ${new Date().toLocaleTimeString('mr-IN')}</div>
+      ${content}
+      <div style="margin-top:30px;font-size:12px;color:#999;text-align:center;">
+        Shree Warana Vidyalaya Timetable System
+      </div>
+    </body>
+    </html>
+  `);
+  w.document.close();
+  setTimeout(()=>w.print(),500);
+}
+
+// ===== EXPORT/IMPORT =====
+function expJSON(){
+  try{
+    const blob=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download='wvs_'+new Date().toISOString().slice(0,10)+'.json';
+    a.style.display='none';document.body.appendChild(a);a.click();
+    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},200);
+    toast('Exported!');
+  }catch(err){toast('Export failed: '+err.message,'error');}
+}
+function quickSave(){
+  try{
+    const blob=new Blob([JSON.stringify(D,null,2)],{type:'application/json'});
+    const date=new Date();
+    const fn='WVS_Backup_'+date.getFullYear()+String(date.getMonth()+1).padStart(2,'0')+String(date.getDate()).padStart(2,'0')+'_'+String(date.getHours()).padStart(2,'0')+String(date.getMinutes()).padStart(2,'0')+'.json';
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download=fn;a.style.display='none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},200);
+    toast('✅ Data saved: '+fn,'success',4000);
+  }catch(err){
+    // Fallback: open as data URI
+    try{
+      const json=JSON.stringify(D,null,2);
+      const uri='data:application/json;charset=utf-8,'+encodeURIComponent(json);
+      const a=document.createElement('a');
+      a.href=uri;a.download='WVS_Backup.json';a.style.display='none';
+      document.body.appendChild(a);a.click();
+      setTimeout(()=>document.body.removeChild(a),200);
+      toast('✅ Data saved (fallback)','success',4000);
+    }catch(e2){toast('Save failed: '+e2.message,'error');}
+  }
+}
+function quickLoad(){document.getElementById('qlImpF').click();}
+function doQLImp(e){
+  const file=e.target.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    try{
+      const d=JSON.parse(ev.target.result);
+      if(!d.teachers||!d.classes)return toast('Invalid backup file!','error');
+      if(!confirm('"'+file.name+'" हा backup restore करायचा? सध्याचा data replace होईल.'))return;
+      // Merge cfg defaults to avoid missing keys
+      const defaultCfg={assemblyTime:'07:15',assemblyDuration:15,mukhyadhyapakName:'',
+        startTime:'07:30',numPeriods:9,shortDayPeriods:6,periodDuration:45,
+        shortBreakAfter:3,shortBreakDuration:15,lunchBreakAfter:6,lunchBreakDuration:90,
+        studyDuration:65,studyBreakDuration:10,subjectPeriodLimit:6,maxTeacherPeriods:36,
+        workingDays:['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']};
+      d.cfg=Object.assign({},defaultCfg,d.cfg||d.settings||{});
+      if(!d.TT)d.TT={};
+      if(!d.CS)d.CS={};
+      D=d;save();
+      // Reload all UI safely
+      try{applyS();}catch(e2){}
+      try{renderSubjects();}catch(e2){}
+      try{renderTeachers();}catch(e2){}
+      try{renderClasses();}catch(e2){}
+      try{popSubjSel();}catch(e2){}
+      try{popCTSel();}catch(e2){}
+      try{popSel('asel');}catch(e2){}
+      try{popSel('ttsel');}catch(e2){}
+      try{popSel('vcsel');}catch(e2){}
+      try{popSelT('vtsel');}catch(e2){}
+      try{ppSels();}catch(e2){}
+      // Navigate to setup
+      const setupBtn=document.querySelector('.nb');
+      try{SP('setup',setupBtn);}catch(e2){}
+      toast('✅ Data restored: '+file.name,'success',4000);
+    }catch(err){toast('Restore failed: '+err.message,'error',5000);}
+  };
+  r.readAsText(file);e.target.value='';
+}
+function expCSV(){const c=D.cfg;const days=c.workingDays||[];const pt=getPTimes();let csv='Class,Division,Day,Period,Time,Subject,Teacher\n';
+  D.classes.forEach(cls=>days.forEach(day=>{for(let p=1;p<=maxP(day);p++){const cell=D.TT[cls.id]?.[day]?.[p];const t=pt.find(x=>x.p===p);const subj=D.subjects.find(x=>x.id===cell?.subjectId);const tchr=D.teachers.find(x=>x.id===cell?.teacherId);csv+=`${cls.std},${cls.division},${day},P${p},${t?m2t12(t2m(t.s)):''}–${t?m2t12(t2m(t.e)):''},${subj?.name||''},${tchr?.name||''}\n`;}}));
+  const blob=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`wvs_${new Date().toISOString().slice(0,10)}.csv`;a.click();toast('CSV exported!');
+}
+function impJSON(){document.getElementById('impF').click();}
+function doImp(e){const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(!d.teachers||!d.classes)return toast('Invalid!','error');D=d;save();load();toast('Imported!');}catch(err){toast('Failed: '+err.message,'error');}};r.readAsText(file);e.target.value='';}
+
+// ===== INIT =====
+load();renderPrev();renderSubjects();renderTeachers();renderClasses();popSubjSel();popCTSel();
+if(!D.subjects.length){
+  [{name:'Marathi',code:'MAR',color:'#e74c3c',type:'theory',priority:'normal'},
+  {name:'Hindi',code:'HIN',color:'#e67e22',type:'theory',priority:'normal'},
+  {name:'English',code:'ENG',color:'#3498db',type:'theory',priority:'high'},
+  {name:'Mathematics',code:'MATH',color:'#9b59b6',type:'theory',priority:'high'},
+  {name:'Science',code:'SCI',color:'#27ae60',type:'theory',priority:'high'},
+  {name:'Social Science',code:'SS',color:'#1abc9c',type:'theory',priority:'normal'},
+  {name:'History',code:'HIST',color:'#c0392b',type:'theory',priority:'normal'},
+  {name:'Geography',code:'GEO',color:'#2980b9',type:'theory',priority:'normal'},
+  {name:'Civics',code:'CIV',color:'#16a085',type:'theory',priority:'normal'},
+  {name:'PE / Sha.Shi.',code:'PE',color:'#f39c12',type:'practical',priority:'normal'},
+  {name:'Chitra Kala',code:'ART',color:'#d35400',type:'practical',priority:'normal'},
+  {name:'Jal Suraksha',code:'JAL',color:'#0984e3',type:'practical',priority:'normal'},
+  {name:'Sanganak',code:'COMP',color:'#2c3e50',type:'practical',priority:'normal'},
+  {name:'Karya Kaushalya',code:'KK',color:'#6c5ce7',type:'practical',priority:'normal'},
+  {name:'Lab / Practical',code:'LAB',color:'#7f8c8d',type:'practical',priority:'normal'}
+  ].forEach((s,i)=>D.subjects.push({id:Date.now()+i,...s}));
+  save();renderSubjects();popSubjSel();
+}
+</script>
+</body>
+</html>
